@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import {
   Activity,
+  ArrowRight,
   BadgeCheck,
   FlaskConical,
   HeartPulse,
@@ -15,11 +16,19 @@ import { Header, CtaLink } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import {
   AnimatedCheck,
+  BlurReveal,
   Counter,
+  DnaStrand,
+  FloatingElement,
   Heartbeat,
+  ImageReveal,
+  MouseParallax,
+  OrbitRing,
+  ParallaxElement,
   Reveal,
   RevealGroup,
   RevealItem,
+  WellnessWave,
 } from "@/components/site/motion-primitives";
 import heroPatients from "@/assets/hero-patients.jpg";
 import consultRoom from "@/assets/consult-room.jpg";
@@ -191,11 +200,28 @@ function Home() {
       <main>
         {/* ---------------- Hero ---------------- */}
         <section className="relative overflow-hidden pt-32 pb-20 md:pt-44 md:pb-28">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -top-40 -right-32 h-[36rem] w-[36rem] rounded-full opacity-25 blur-3xl"
-            style={{ background: "var(--gradient-brand)" }}
-          />
+          <FloatingElement
+            className="pointer-events-none absolute -top-40 -right-32 h-[36rem] w-[36rem]"
+            amplitude={14}
+            duration={9}
+          >
+            <div
+              className="h-[36rem] w-[36rem] rounded-full opacity-25 blur-3xl"
+              style={{ background: "var(--gradient-brand)" }}
+            />
+          </FloatingElement>
+          <FloatingElement
+            className="pointer-events-none absolute top-40 -left-24 hidden h-64 w-64 lg:block"
+            amplitude={10}
+            duration={7}
+            delay={1.2}
+          >
+            <div
+              className="h-64 w-64 rounded-full opacity-20 blur-3xl"
+              style={{ background: "var(--gradient-brand)" }}
+            />
+          </FloatingElement>
+          <DnaStrand className="pointer-events-none absolute top-56 right-6 hidden h-56 w-16 text-brand/40 xl:block" />
           <div className="container-rmc grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
             <div>
               <Reveal>
@@ -261,8 +287,8 @@ function Home() {
               </Reveal>
             </div>
 
-            <Reveal delay={0.15} scale={0.96} className="relative">
-              <div className="relative overflow-hidden rounded-[2rem] border border-border bg-card shadow-[var(--shadow-lift)]">
+            <MouseParallax className="relative" strength={9}>
+              <ImageReveal delay={0.2} from="bottom" className="relative overflow-hidden rounded-[2rem] border border-border bg-card shadow-[var(--shadow-lift)]">
                 <img
                   src={heroPatients}
                   alt="Healthy, energized man and woman after hormone therapy at Royal Medical Center"
@@ -280,8 +306,8 @@ function Home() {
                   </div>
                   <Heartbeat className="mt-3 h-6 w-full text-brand" />
                 </div>
-              </div>
-            </Reveal>
+              </ImageReveal>
+            </MouseParallax>
           </div>
         </section>
 
@@ -330,7 +356,7 @@ function Home() {
                       className="mt-6 inline-flex items-center gap-2 text-sm font-semibold underline-offset-4 transition-all hover:gap-3 hover:underline"
                     >
                       Explore program
-                      <span aria-hidden="true">→</span>
+                      <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />
                     </a>
                   </article>
                 </RevealItem>
@@ -360,10 +386,10 @@ function Home() {
                 <RevealItem key={label}>
                   <a
                     href={href}
-                    className="surface-card flex items-center justify-between px-5 py-4 text-sm font-semibold tracking-wide hover:-translate-y-1 hover:border-brand"
+                    className="surface-card group flex items-center justify-between px-5 py-4 text-sm font-semibold tracking-wide hover:-translate-y-1 hover:border-brand"
                   >
                     {label}
-                    <span aria-hidden="true">→</span>
+                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />
                   </a>
                 </RevealItem>
               ))}
@@ -404,8 +430,8 @@ function Home() {
               </div>
             </div>
 
-            <Reveal delay={0.1} x={30} y={0}>
-              <div className="relative overflow-hidden rounded-[2rem] border border-border">
+            <ParallaxElement distance={22}>
+              <ImageReveal delay={0.1} from="left" className="relative overflow-hidden rounded-[2rem] border border-border">
                 <img
                   src={consultRoom}
                   alt="Bright, modern Royal Medical Center consultation room"
@@ -414,8 +440,8 @@ function Home() {
                   height={960}
                   className="h-full w-full object-cover"
                 />
-              </div>
-            </Reveal>
+              </ImageReveal>
+            </ParallaxElement>
           </div>
         </section>
 
@@ -463,6 +489,7 @@ function Home() {
                 Physician-designed programs for men and women, backed by comprehensive labs and
                 ongoing monitoring.
               </p>
+              <WellnessWave className="mt-6 h-8 w-full max-w-md text-brand/60" />
             </Reveal>
 
             <RevealGroup className="mt-12 grid gap-6 md:grid-cols-2">
@@ -518,16 +545,22 @@ function Home() {
                       <h3 className="mt-3 text-2xl font-bold sm:text-3xl">{step.title}</h3>
                       <p className="mt-4 text-muted-foreground">{step.body}</p>
                     </div>
-                    <figure className="relative overflow-hidden rounded-[2rem] border border-border shadow-[var(--shadow-soft)]">
-                      <img
-                        src={step.image}
-                        alt={step.alt}
-                        loading="lazy"
-                        width={1280}
-                        height={960}
-                        className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
-                      />
-                    </figure>
+                    <ImageReveal
+                      from={i % 2 === 1 ? "left" : "bottom"}
+                      zoom={i !== 1}
+                      className="group relative overflow-hidden rounded-[2rem] border border-border shadow-[var(--shadow-soft)]"
+                    >
+                      <figure>
+                        <img
+                          src={step.image}
+                          alt={step.alt}
+                          loading="lazy"
+                          width={1280}
+                          height={960}
+                          className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+                        />
+                      </figure>
+                    </ImageReveal>
                   </div>
                 </Reveal>
               ))}
@@ -544,18 +577,7 @@ function Home() {
           <div className="container-rmc grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
             <Reveal>
               <div className="relative grid aspect-square place-items-center overflow-hidden rounded-[2rem] border border-border bg-surface">
-                <svg viewBox="0 0 200 200" className="spin-slow h-64 w-64 text-brand" aria-hidden="true">
-                  <circle
-                    cx="100"
-                    cy="100"
-                    r="86"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeDasharray="6 12"
-                    strokeLinecap="round"
-                  />
-                </svg>
+                <OrbitRing className="h-64 w-64 text-brand" duration={48} />
                 <div className="absolute grid place-items-center text-center">
                   <Users className="h-10 w-10 text-brand" aria-hidden="true" />
                   <p className="mt-3 font-display text-4xl font-bold">
@@ -583,7 +605,7 @@ function Home() {
         {/* ---------------- Our commitment ---------------- */}
         <section className="border-y border-border bg-surface py-20 md:py-28">
           <div className="container-rmc">
-            <Reveal className="max-w-3xl">
+            <BlurReveal className="max-w-3xl">
               <h2 className="text-3xl font-bold sm:text-4xl">Our Commitment</h2>
               <p className="mt-4 text-muted-foreground">
                 We encourage prospective patients to research their options and make informed
@@ -591,7 +613,7 @@ function Home() {
                 Therapy Programs with transparent competitive pricing and licensed medical
                 supervision.
               </p>
-            </Reveal>
+            </BlurReveal>
 
             <RevealGroup className="mt-10 grid gap-6 md:grid-cols-2">
               {[
@@ -628,11 +650,16 @@ function Home() {
           <div className="container-rmc">
             <Reveal>
               <div className="relative overflow-hidden rounded-[2.5rem] border border-border bg-card p-10 text-center shadow-[var(--shadow-lift)] md:p-16">
-                <div
-                  aria-hidden="true"
-                  className="pointer-events-none absolute -bottom-24 left-1/2 h-72 w-[40rem] -translate-x-1/2 rounded-full opacity-25 blur-3xl"
-                  style={{ background: "var(--gradient-brand)" }}
-                />
+                <FloatingElement
+                  className="pointer-events-none absolute -bottom-24 left-1/2 h-72 w-[40rem] -translate-x-1/2"
+                  amplitude={12}
+                  duration={8}
+                >
+                  <div
+                    className="h-72 w-[40rem] rounded-full opacity-25 blur-3xl"
+                    style={{ background: "var(--gradient-brand)" }}
+                  />
+                </FloatingElement>
                 <h2 className="relative text-3xl font-bold sm:text-4xl">
                   Ready to feel like yourself again?
                 </h2>

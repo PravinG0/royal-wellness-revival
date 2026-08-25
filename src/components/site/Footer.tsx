@@ -1,4 +1,6 @@
 import { Facebook, Instagram, Mail, MapPin, Phone, Twitter } from "lucide-react";
+import { motion } from "motion/react";
+import { Reveal, StaggerContainer, StaggerItem, WellnessWave } from "@/components/site/motion-primitives";
 
 const IMPORTANT = [
   ["Home", "https://royalmedicalcenters.com/"],
@@ -30,8 +32,9 @@ const PROGRAMS = [
 export function Footer() {
   return (
     <footer className="border-t border-border bg-secondary/50">
+      <WellnessWave className="container-rmc h-10 w-full text-brand/40" />
       <div className="container-rmc grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-4">
-        <div>
+        <Reveal>
           <h2 className="text-lg font-semibold">Contact Us</h2>
           <address className="mt-4 space-y-3 text-sm text-muted-foreground not-italic">
             <p className="flex gap-2">
@@ -61,16 +64,19 @@ export function Footer() {
             ].map(([Icon, label, href]) => {
               const I = Icon as typeof Facebook;
               return (
-                <a
+                <motion.a
                   key={label as string}
                   href={href as string}
                   aria-label={label as string}
                   target="_blank"
                   rel="noreferrer noopener"
-                  className="grid h-10 w-10 place-items-center rounded-full border border-border bg-card transition-transform hover:-translate-y-0.5 hover:border-brand"
+                  whileHover={{ y: -3, scale: 1.06 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: "spring", stiffness: 380, damping: 20 }}
+                  className="grid h-10 w-10 place-items-center rounded-full border border-border bg-card hover:border-brand"
                 >
                   <I className="h-4 w-4" aria-hidden="true" />
-                </a>
+                </motion.a>
               );
             })}
           </div>
@@ -86,32 +92,32 @@ export function Footer() {
               Belmar Pharma Solutions
             </a>
           </p>
-        </div>
+        </Reveal>
 
         <nav aria-label="Important links">
           <h2 className="text-lg font-semibold">Important Links</h2>
-          <ul className="mt-4 space-y-2.5 text-sm text-muted-foreground">
+          <StaggerContainer className="mt-4 space-y-2.5 text-sm text-muted-foreground" stagger={0.04}>
             {IMPORTANT.map(([label, href]) => (
-              <li key={label}>
+              <StaggerItem key={label} y={10} scale={1}>
                 <a className="transition-colors hover:text-foreground" href={href}>
                   {label}
                 </a>
-              </li>
+              </StaggerItem>
             ))}
-          </ul>
+          </StaggerContainer>
         </nav>
 
         <nav aria-label="Program links" className="lg:col-span-2">
           <h2 className="text-lg font-semibold">Programs</h2>
-          <ul className="mt-4 grid gap-2.5 text-sm text-muted-foreground sm:grid-cols-2">
+          <StaggerContainer className="mt-4 grid gap-2.5 text-sm text-muted-foreground sm:grid-cols-2" stagger={0.03}>
             {PROGRAMS.map(([label, href]) => (
-              <li key={label}>
+              <StaggerItem key={label} y={10} scale={1}>
                 <a className="transition-colors hover:text-foreground" href={href}>
                   {label}
                 </a>
-              </li>
+              </StaggerItem>
             ))}
-          </ul>
+          </StaggerContainer>
         </nav>
       </div>
 
