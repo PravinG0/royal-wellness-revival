@@ -26,24 +26,24 @@ function RotatingHeadline() {
   return (
     <h1
       id="hero-heading"
-      className="mt-4 font-display text-[clamp(2.6rem,6.4vw,4.6rem)] font-light leading-[1.1] tracking-[-0.025em] text-foreground flex flex-col items-start h-[160px] md:h-[180px] lg:h-[190px]"
+      className="mt-4 font-display text-[clamp(2.6rem,6.4vw,4.6rem)] font-light leading-[1.1] tracking-[-0.025em] text-foreground"
     >
-      <div className="relative w-full h-[1em] mb-2 overflow-visible">
+      <div className="relative h-[1.2em] w-full overflow-hidden mb-1">
         <AnimatePresence mode="popLayout">
           <motion.span
             key={index}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -30 }}
+            initial={{ opacity: 0, y: "100%" }}
+            animate={{ opacity: 1, y: "0%" }}
+            exit={{ opacity: 0, y: "-100%" }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
-            className="absolute left-0 font-medium whitespace-nowrap drop-shadow-sm"
+            className="absolute left-0 top-0 font-medium whitespace-nowrap drop-shadow-sm"
             style={{ color: words[index].color }}
           >
             {words[index].text}
           </motion.span>
         </AnimatePresence>
       </div>
-      <span className="font-bold text-foreground">Personalized to you</span>
+      <span className="font-bold text-foreground block mt-1">Personalized to you</span>
     </h1>
   );
 }
@@ -97,7 +97,7 @@ export function Hero() {
     <section
       ref={ref}
       aria-labelledby="hero-heading"
-      className="relative isolate flex min-h-[88svh] items-center overflow-hidden bg-background pt-24 pb-16 sm:pt-32 sm:pb-24 lg:min-h-[92svh] lg:py-0 lg:pt-20"
+      className="relative isolate flex flex-col justify-center min-h-[88svh] overflow-hidden bg-background pt-24 pb-16 sm:pt-32 sm:pb-24 lg:min-h-[92svh] lg:py-0 lg:pt-20"
     >
       <HeroBackdrop />
 
