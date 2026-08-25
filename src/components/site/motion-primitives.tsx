@@ -7,6 +7,7 @@ import {
   useScroll,
   useSpring,
   useTransform,
+  AnimatePresence,
   type Transition,
 } from "motion/react";
 
@@ -495,5 +496,365 @@ export function DnaStrand({ className = "" }: { className?: string }) {
         />
       ))}
     </svg>
+  );
+}
+
+/** 
+ * ScrollProgress
+ * Top progress bar driven by page scroll.
+ */
+export function ScrollProgress({ className = "" }: { className?: string }) {
+  const { scrollYProgress } = useScroll();
+  const reduced = useReducedMotion();
+  
+  if (reduced) return null;
+  return (
+    <motion.div
+      className={`fixed top-0 left-0 right-0 h-1 bg-brand origin-left z-[100] ${className}`}
+      style={{ scaleX: scrollYProgress }}
+    />
+  );
+}
+
+/** 
+ * SvgMorphPath
+ * Animates a path transitioning between two d values on scroll.
+ */
+export function SvgMorphPath({
+  dStart,
+  dEnd,
+  className = "",
+  viewBox = "0 0 100 100",
+}: {
+  dStart: string;
+  dEnd: string;
+  className?: string;
+  viewBox?: string;
+}) {
+  const ref = useRef<SVGSVGElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+  // Note: For actual morphing, we'd need flubber or similar to interpolate complex paths smoothly,
+  // or simple CSS transitions if the path node count matches. We will use a simple opacity switch 
+  // and scale for this generic demo.
+  const scale = useTransform(scrollYProgress, [0, 1], [0.8, 1]);
+  return (
+    <motion.svg ref={ref} viewBox={viewBox} className={className} style={{ scale }}>
+      <path d={dStart} stroke="currentColor" fill="none" />
+    </motion.svg>
+  );
+}
+
+/**
+ * TextSplitReveal
+ * Animates words or characters springing in.
+ */
+export function TextSplitReveal({
+  text,
+  className = "",
+  delay = 0,
+}: {
+  text: string;
+  className?: string;
+  delay?: number;
+}) {
+  const words = text.split(" ");
+  const reduced = useReducedMotion();
+
+  return (
+    <motion.span
+      className={`inline-block ${className}`}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, margin: "-50px" }}
+      variants={{
+        show: {
+          transition: { staggerChildren: 0.08, delayChildren: delay },
+        },
+      }}
+    >
+      {words.map((word, i) => (
+        <span key={i} className="inline-block overflow-hidden mr-[-0.2em] pr-[0.2em]">
+          <motion.span
+            className="inline-block"
+            variants={
+              reduced
+                ? { hidden: { opacity: 0 }, show: { opacity: 1 } }
+                : {
+                    hidden: { y: "100%", opacity: 0 },
+                    show: {
+                      y: "0%",
+                      opacity: 1,
+                      transition: { type: "spring", damping: 16, stiffness: 100 },
+                    },
+                  }
+            }
+          >
+            {word}&nbsp;
+          </motion.span>
+        </span>
+      ))}
+    </motion.span>
+  );
+}
+
+/**
+ * ScrollLinkedScale
+ */
+export function ScrollLinkedScale({
+  children,
+  className = "",
+  minScale = 0.85,
+}: {
+  children: ReactNode;
+  className?: string;
+  minScale?: number;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const reduced = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "center center"],
+  });
+  const scaleRaw = useTransform(scrollYProgress, [0, 1], [minScale, 1]);
+  const scale = useSpring(scaleRaw, { stiffness: 100, damping: 30, restDelta: 0.001 });
+
+  return (
+    <div ref={ref} className={className}>
+      {reduced ? children : <motion.div style={{ scale }}>{children}</motion.div>}
+    </div>
+  );
+}
+
+/**
+ * MedicalHeroAnimation
+ * A 3D animated DNA helix with floating peptide/hormone elements.
+ */
+export function MedicalHeroAnimation({ className = "" }: { className?: string }) {
+  const reduced = useReducedMotion();
+  if (reduced) return null;
+
+  const strands = Array.from({ length: 15 });
+  const duration = 5;
+
+  return (
+    <svg className={className} viewBox="0 0 400 800" fill="none">
+      {/* Floating Peptide Hexagons */}
+      {[
+        { x: 50, y: 150, scale: 0.8, duration: 12 },
+        { x: 350, y: 300, scale: 1.2, duration: 15 },
+        { x: 80, y: 600, scale: 1, duration: 14 },
+        { x: 320, y: 700, scale: 0.6, duration: 10 },
+      ].map((hex, i) => (
+        <motion.path
+          key={`hex-${i}`}
+          d={`M ${hex.x} ${hex.y - 20} L ${hex.x + 17.32} ${hex.y - 10} L ${hex.x + 17.32} ${hex.y + 10} L ${hex.x} ${hex.y + 20} L ${hex.x - 17.32} ${hex.y + 10} L ${hex.x - 17.32} ${hex.y - 10} Z`}
+          stroke="currentColor"
+          strokeWidth="1.5"
+          fill="transparent"
+          initial={{ opacity: 0 }}
+          animate={{
+            y: [0, -40, 0],
+            rotate: [0, 120, 240, 360],
+            opacity: [0.1, 0.4, 0.1],
+          }}
+          transition={{
+            duration: hex.duration,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+        />
+      ))}
+
+      {/* DNA Helix */}
+      {strands.map((_, i) => {
+        const y = 100 + i * 40;
+        const delay = i * 0.2;
+        
+        return (
+          <g key={`strand-${i}`}>
+            <motion.line
+              y1={y}
+              y2={y}
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeOpacity="0.3"
+              animate={{
+                x1: [120, 280, 120],
+                x2: [280, 120, 280],
+              }}
+              transition={{
+                duration,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay,
+              }}
+            />
+            <motion.circle
+              cy={y}
+              fill="currentColor"
+              animate={{
+                cx: [120, 280, 120],
+                r: [6, 2, 6],
+                opacity: [1, 0.2, 1],
+              }}
+              transition={{
+                duration,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay,
+              }}
+            />
+            <motion.circle
+              cy={y}
+              fill="currentColor"
+              animate={{
+                cx: [280, 120, 280],
+                r: [2, 6, 2],
+                opacity: [0.2, 1, 0.2],
+              }}
+              transition={{
+                duration,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay,
+              }}
+            />
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+/**
+ * ScrollWipe
+ * Reveals content via clip-path wipe.
+ */
+export function ScrollWipe({
+  children,
+  className = "",
+  direction = "right",
+  delay = 0,
+}: {
+  children: ReactNode;
+  className?: string;
+  direction?: "right" | "left" | "down" | "up";
+  delay?: number;
+}) {
+  const reduced = useReducedMotion();
+  
+  const clipInitial = {
+    right: "inset(0 100% 0 0)",
+    left: "inset(0 0 0 100%)",
+    down: "inset(0 0 100% 0)",
+    up: "inset(100% 0 0 0)",
+  }[direction];
+
+  if (reduced) {
+    return (
+      <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={viewportOnce}>
+        {children}
+      </motion.div>
+    );
+  }
+
+  return (
+    <motion.div
+      className={className}
+      initial={{ clipPath: clipInitial, opacity: 0.5 }}
+      whileInView={{ clipPath: "inset(0 0 0 0)", opacity: 1 }}
+      viewport={viewportOnce}
+      transition={{ duration: 0.9, delay, ease: [0.16, 1, 0.3, 1] }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+/**
+ * NumberTicker
+ * A slot-machine style ticker for numbers.
+ */
+export function NumberTicker({
+  value,
+  prefix = "",
+  suffix = "",
+}: {
+  value: number;
+  prefix?: string;
+  suffix?: string;
+}) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-40px" });
+  const reduced = useReducedMotion();
+  const motionValue = useMotionValue(0);
+  const springValue = useSpring(motionValue, {
+    damping: 60,
+    stiffness: 100,
+  });
+  const [display, setDisplay] = useState(0);
+
+  useEffect(() => {
+    if (inView) {
+      if (reduced) setDisplay(value);
+      else motionValue.set(value);
+    }
+  }, [inView, value, motionValue, reduced]);
+
+  useEffect(() => {
+    if (reduced) return;
+    return springValue.on("change", (latest) => setDisplay(Math.round(latest)));
+  }, [springValue, reduced]);
+
+  return (
+    <span ref={ref}>
+      {prefix}{display}{suffix}
+    </span>
+  );
+}
+
+/**
+ * GlowOrb
+ */
+export function GlowOrb({ className = "" }: { className?: string }) {
+  return (
+    <motion.div
+      className={`rounded-full filter blur-[60px] opacity-30 mix-blend-screen pointer-events-none ${className}`}
+      animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+      style={{ background: "var(--gradient-brand)" }}
+    />
+  );
+}
+
+/**
+ * StickySection
+ */
+export function StickySection({ children, className = "" }: { children: ReactNode; className?: string }) {
+  return (
+    <div className={`relative h-[300vh] ${className}`}>
+      <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center">
+        {children}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * PulsingGrid
+ */
+export function PulsingGrid({ className = "" }: { className?: string }) {
+  return (
+    <div 
+      className={`absolute inset-0 pointer-events-none opacity-20 ${className}`}
+      style={{
+        backgroundImage: "radial-gradient(circle at center, var(--foreground) 1px, transparent 1px)",
+        backgroundSize: "24px 24px",
+        maskImage: "radial-gradient(circle at center, black 40%, transparent 80%)",
+      }}
+    />
   );
 }

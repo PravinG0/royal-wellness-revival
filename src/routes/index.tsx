@@ -1,4 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { motion, useScroll, useTransform, AnimatePresence } from "motion/react";
+import { useRef, useState } from "react";
 import {
   Activity,
   ArrowRight,
@@ -13,7 +15,12 @@ import {
   Users,
 } from "lucide-react";
 import { Header, CtaLink } from "@/components/site/Header";
+import { Hero } from "@/components/site/Hero";
+import { ProgramShowcase } from "@/components/site/ProgramShowcase";
+import { BalanceSection } from "@/components/site/BalanceSection";
 import { Footer } from "@/components/site/Footer";
+import { WhyChooseSection } from "@/components/site/WhyChooseSection";
+import { OurCommitment } from "@/components/site/OurCommitment";
 import {
   AnimatedCheck,
   BlurReveal,
@@ -29,6 +36,16 @@ import {
   RevealGroup,
   RevealItem,
   WellnessWave,
+  ScrollProgress,
+  SvgMorphPath,
+  TextSplitReveal,
+  ScrollLinkedScale,
+  MedicalHeroAnimation,
+  ScrollWipe,
+  NumberTicker,
+  GlowOrb,
+  StickySection,
+  PulsingGrid,
 } from "@/components/site/motion-primitives";
 import heroPatients from "@/assets/hero-patients.jpg";
 import consultRoom from "@/assets/consult-room.jpg";
@@ -146,9 +163,7 @@ const SERVICES = [
     icon: Activity,
     title: "Weight Loss",
     points: [
-      "Personalized medical weight loss programs",
-      "For men and women seeking lasting results",
-      "Restore energy, health, and confidence",
+      "At Royal Medical Center, we specialize in helping men and women achieve lasting weight loss through personalized medical programs that restore energy, health, and confidence.",
     ],
   },
   {
@@ -199,503 +214,519 @@ function Home() {
       <Header />
       <main>
         {/* ---------------- Hero ---------------- */}
-        <section className="relative overflow-hidden pt-32 pb-20 md:pt-44 md:pb-28">
-          <FloatingElement
-            className="pointer-events-none absolute -top-40 -right-32 h-[36rem] w-[36rem]"
-            amplitude={14}
-            duration={9}
-          >
-            <div
-              className="h-[36rem] w-[36rem] rounded-full opacity-25 blur-3xl"
-              style={{ background: "var(--gradient-brand)" }}
-            />
-          </FloatingElement>
-          <FloatingElement
-            className="pointer-events-none absolute top-40 -left-24 hidden h-64 w-64 lg:block"
-            amplitude={10}
-            duration={7}
-            delay={1.2}
-          >
-            <div
-              className="h-64 w-64 rounded-full opacity-20 blur-3xl"
-              style={{ background: "var(--gradient-brand)" }}
-            />
-          </FloatingElement>
-          <DnaStrand className="pointer-events-none absolute top-56 right-6 hidden h-56 w-16 text-brand/40 xl:block" />
-          <div className="container-rmc grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
-            <div>
-              <Reveal>
-                <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3.5 py-1.5 text-xs font-medium tracking-wide">
-                  <span className="relative flex h-2 w-2">
-                    <span className="pulse-ring absolute inline-flex h-full w-full rounded-full bg-brand" />
-                    <span className="relative inline-flex h-2 w-2 rounded-full bg-brand" />
-                  </span>
-                  Licensed physicians · Nationwide telehealth
-                </span>
-              </Reveal>
-
-              <Reveal delay={0.08}>
-                <h1 className="mt-6 text-4xl leading-[1.05] font-bold sm:text-5xl lg:text-6xl">
-                  Royal Medical Center
-                  <span className="mt-3 block text-gradient-brand">Personalized to you</span>
-                </h1>
-              </Reveal>
-
-              <Reveal delay={0.16}>
-                <p className="mt-5 max-w-xl text-base text-muted-foreground sm:text-lg">
-                  Competitive pricing for Testosterone Therapy, Hormone Therapy, Weight Management,
-                  and Peptide programs — personalized and designed around your individual health
-                  needs.
-                </p>
-              </Reveal>
-
-              <Reveal delay={0.24}>
-                <ul className="mt-6 flex flex-wrap gap-2">
-                  {BENEFITS.map((b) => (
-                    <li
-                      key={b}
-                      className="rounded-full border border-border bg-card px-3.5 py-1.5 text-sm text-muted-foreground"
-                    >
-                      {b}
-                    </li>
-                  ))}
-                </ul>
-              </Reveal>
-
-              <Reveal delay={0.32}>
-                <div className="mt-9 flex flex-wrap items-center gap-3">
-                  <CtaLink href="https://royalmedicalcenters.com/contact/#form">Get Started</CtaLink>
-                  <CtaLink href="#programs" variant="outline">
-                    View Programs & Pricing
-                  </CtaLink>
-                </div>
-              </Reveal>
-
-              <Reveal delay={0.4}>
-                <dl className="mt-12 grid max-w-lg grid-cols-3 gap-6 border-t border-border pt-8">
-                  {[
-                    { label: "Programs from", value: <Counter to={67} prefix="$" suffix="/mo" /> },
-                    { label: "Price beat guarantee", value: <Counter to={25} suffix="%" /> },
-                    { label: "Hidden fees", value: <Counter to={0} /> },
-                  ].map((s, i) => (
-                    <div key={i}>
-                      <dt className="order-2 text-xs text-muted-foreground">{s.label}</dt>
-                      <dd className="font-display text-2xl font-bold sm:text-3xl">{s.value}</dd>
-                    </div>
-                  ))}
-                </dl>
-              </Reveal>
-            </div>
-
-            <MouseParallax className="relative" strength={9}>
-              <ImageReveal delay={0.2} from="bottom" className="relative overflow-hidden rounded-[2rem] border border-border bg-card shadow-[var(--shadow-lift)]">
-                <img
-                  src={heroPatients}
-                  alt="Healthy, energized man and woman after hormone therapy at Royal Medical Center"
-                  width={1280}
-                  height={1280}
-                  fetchPriority="high"
-                  className="h-full w-full object-cover"
-                />
-                <div className="absolute bottom-4 left-4 right-4 rounded-2xl border border-border bg-card/90 p-4 backdrop-blur">
-                  <div className="flex items-center gap-3">
-                    <ShieldCheck className="h-6 w-6 text-brand" aria-hidden="true" />
-                    <p className="text-sm font-medium">
-                      All-inclusive care: labs, medications, physicals & doctor consults.
-                    </p>
-                  </div>
-                  <Heartbeat className="mt-3 h-6 w-full text-brand" />
-                </div>
-              </ImageReveal>
-            </MouseParallax>
-          </div>
-        </section>
+        <Hero />
 
         {/* ---------------- Programs & pricing ---------------- */}
-        <section id="programs" className="scroll-mt-24 border-y border-border bg-surface py-20 md:py-28">
-          <div className="container-rmc">
-            <Reveal className="max-w-2xl">
-              <h2 className="text-3xl font-bold sm:text-4xl">Programs & Pricing</h2>
-              <p className="mt-3 text-muted-foreground">
-                Transparent, all-inclusive monthly pricing. Everything you need is covered — no
-                surprises, ever.
-              </p>
-            </Reveal>
-
-            <RevealGroup className="mt-12 grid gap-6 md:grid-cols-3">
-              {PRICING.map((p) => (
-                <RevealItem key={p.name}>
-                  <article
-                    className={
-                      "surface-card group h-full p-7 hover:-translate-y-1.5 hover:shadow-[var(--shadow-lift)] " +
-                      (p.featured ? "ring-2 ring-brand" : "")
-                    }
-                  >
-                    <div className="flex items-center justify-between">
-                      <span
-                        className="grid h-12 w-12 place-items-center rounded-2xl"
-                        style={{ background: "var(--brand-soft)" }}
-                      >
-                        <p.icon className="h-6 w-6" aria-hidden="true" />
-                      </span>
-                      {p.featured && (
-                        <span className="rounded-full bg-brand px-3 py-1 text-xs font-semibold text-accent-foreground">
-                          Most popular
-                        </span>
-                      )}
-                    </div>
-                    <h3 className="mt-6 text-xl font-semibold">{p.name}</h3>
-                    <p className="mt-2 text-sm text-muted-foreground">{p.blurb}</p>
-                    <p className="mt-6 font-display text-4xl font-bold">
-                      <Counter to={p.price} prefix="$" />
-                      <span className="text-base font-medium text-muted-foreground">/mo</span>
-                    </p>
-                    <p className="text-xs text-muted-foreground">Starting price</p>
-                    <a
-                      href={p.href}
-                      className="mt-6 inline-flex items-center gap-2 text-sm font-semibold underline-offset-4 transition-all hover:gap-3 hover:underline"
-                    >
-                      Explore program
-                      <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />
-                    </a>
-                  </article>
-                </RevealItem>
-              ))}
-            </RevealGroup>
-
-            <Reveal delay={0.1} className="mt-8">
-              <div
-                className="flex flex-col items-start gap-4 rounded-3xl p-7 sm:flex-row sm:items-center sm:justify-between"
-                style={{ background: "var(--gradient-brand)" }}
-              >
-                <div className="flex items-start gap-3 text-accent-foreground">
-                  <BadgeCheck className="mt-0.5 h-6 w-6 shrink-0" aria-hidden="true" />
-                  <p className="max-w-2xl text-sm font-medium sm:text-base">
-                    <strong>Low Price Guarantee:</strong> If you find another clinic that is equal
-                    to ours for a better price, we will beat their price by 25%.
-                  </p>
-                </div>
-                <CtaLink href="https://royalmedicalcenters.com/contact/#form" variant="outline">
-                  Claim your price
-                </CtaLink>
-              </div>
-            </Reveal>
-
-            <RevealGroup className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              {CATEGORIES.map(([label, href]) => (
-                <RevealItem key={label}>
-                  <a
-                    href={href}
-                    className="surface-card group flex items-center justify-between px-5 py-4 text-sm font-semibold tracking-wide hover:-translate-y-1 hover:border-brand"
-                  >
-                    {label}
-                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />
-                  </a>
-                </RevealItem>
-              ))}
-            </RevealGroup>
-
-            <p className="mt-8 text-xs text-muted-foreground italic">
-              Results may vary for each individual and must be medically necessary. Consult your
-              prescriber to discuss the best treatment options for you.
-            </p>
-          </div>
-        </section>
+        <ProgramShowcase />
 
         {/* ---------------- Why choose us ---------------- */}
-        <section id="why-us" className="scroll-mt-24 py-20 md:py-28">
-          <div className="container-rmc grid gap-12 lg:grid-cols-2 lg:items-center">
-            <div>
-              <Reveal>
-                <h2 className="text-3xl font-bold sm:text-4xl">Why Royal Medical Center?</h2>
-              </Reveal>
-              <div className="mt-8 space-y-5">
-                <Reveal delay={0.05}>
-                  <div className="surface-card p-6">
-                    <h3 className="text-lg font-semibold">Low Price Guarantee</h3>
-                    <p className="mt-2 text-sm text-muted-foreground">
-                      We'll beat any competitor's price by 25%.
-                    </p>
-                  </div>
-                </Reveal>
-                <Reveal delay={0.12}>
-                  <div className="surface-card p-6">
-                    <h3 className="text-lg font-semibold">No Hidden Fees</h3>
-                    <p className="mt-2 text-sm text-muted-foreground">
-                      Our pricing is all-inclusive, covering everything you need, including lab
-                      testing, medications, physicals and Dr. consultations — no surprises, ever.
-                    </p>
-                  </div>
-                </Reveal>
-              </div>
-            </div>
-
-            <ParallaxElement distance={22}>
-              <ImageReveal delay={0.1} from="left" className="relative overflow-hidden rounded-[2rem] border border-border">
-                <img
-                  src={consultRoom}
-                  alt="Bright, modern Royal Medical Center consultation room"
-                  loading="lazy"
-                  width={1280}
-                  height={960}
-                  className="h-full w-full object-cover"
-                />
-              </ImageReveal>
-            </ParallaxElement>
-          </div>
-        </section>
+        <WhyChooseSection />
 
         {/* ---------------- Optimal health / balance ---------------- */}
-        <section className="border-y border-border bg-surface py-20 md:py-28">
-          <div className="container-rmc grid gap-12 lg:grid-cols-2 lg:items-center">
-            <Reveal>
-              <h2 className="text-3xl font-bold sm:text-4xl">Optimal Health Starts With Balance</h2>
-              <p className="mt-4 text-muted-foreground">
-                Our hormone therapy programs are customized to your unique needs, ensuring you feel
-                your best today and for years to come. We don't believe in one-size-fits-all
-                treatments.
-              </p>
-              <p className="mt-4 text-sm text-muted-foreground italic">
-                Your health journey is personal. We're with you every step of the way.
-              </p>
-            </Reveal>
-
-            <RevealGroup className="grid gap-4 sm:grid-cols-2">
-              {[
-                "Comprehensive Lab Testing",
-                "Ongoing Monitoring",
-                "Medical-Grade Hormone Therapy",
-                "Guidance from Professionals",
-              ].map((item) => (
-                <RevealItem key={item}>
-                  <div className="surface-card flex items-center gap-3 p-5 hover:-translate-y-1">
-                    <AnimatedCheck className="h-7 w-7 shrink-0" />
-                    <span className="text-sm font-semibold">{item}</span>
-                  </div>
-                </RevealItem>
-              ))}
-            </RevealGroup>
-          </div>
-        </section>
+        <BalanceSection />
 
         {/* ---------------- Services ---------------- */}
-        <section id="services" className="scroll-mt-24 py-20 md:py-28">
-          <div className="container-rmc">
-            <Reveal className="max-w-2xl">
-              <h2 className="text-3xl font-bold sm:text-4xl">
-                Hormone & Weight Management Services
-              </h2>
-              <p className="mt-3 text-muted-foreground">
-                Physician-designed programs for men and women, backed by comprehensive labs and
-                ongoing monitoring.
-              </p>
-              <WellnessWave className="mt-6 h-8 w-full max-w-md text-brand/60" />
-            </Reveal>
-
-            <RevealGroup className="mt-12 grid gap-6 md:grid-cols-2">
-              {SERVICES.map((s) => (
-                <RevealItem key={s.title}>
-                  <article className="surface-card h-full p-7 hover:-translate-y-1.5 hover:shadow-[var(--shadow-lift)]">
-                    <span
-                      className="grid h-12 w-12 place-items-center rounded-2xl"
-                      style={{ background: "var(--brand-soft)" }}
-                    >
-                      <s.icon className="h-6 w-6" aria-hidden="true" />
-                    </span>
-                    <h3 className="mt-5 text-xl font-semibold">{s.title}</h3>
-                    <ul className="mt-4 space-y-3">
-                      {s.points.map((p) => (
-                        <li key={p} className="flex gap-3 text-sm text-muted-foreground">
-                          <AnimatedCheck className="h-5 w-5 shrink-0" />
-                          {p}
-                        </li>
-                      ))}
-                    </ul>
-                  </article>
-                </RevealItem>
-              ))}
-            </RevealGroup>
-          </div>
-        </section>
+        <ServicesSection />
 
         {/* ---------------- How it works ---------------- */}
-        <section
-          id="how-it-works"
-          className="scroll-mt-24 border-y border-border bg-surface py-20 md:py-28"
-        >
-          <div className="container-rmc">
-            <Reveal className="max-w-2xl">
-              <h2 className="text-3xl font-bold sm:text-4xl">How Our Programs Work</h2>
-              <Heartbeat className="mt-4 h-8 w-56 text-brand" />
-            </Reveal>
-
-            <div className="mt-14 space-y-16">
-              {STEPS.map((step, i) => (
-                <Reveal key={step.n} delay={0.05}>
-                  <div
-                    className={
-                      "grid items-center gap-10 lg:grid-cols-2 " +
-                      (i % 2 === 1 ? "lg:[&>figure]:order-first" : "")
-                    }
-                  >
-                    <div>
-                      <span className="font-display text-sm font-bold tracking-[0.3em] text-muted-foreground">
-                        STEP {step.n}
-                      </span>
-                      <h3 className="mt-3 text-2xl font-bold sm:text-3xl">{step.title}</h3>
-                      <p className="mt-4 text-muted-foreground">{step.body}</p>
-                    </div>
-                    <ImageReveal
-                      from={i % 2 === 1 ? "left" : "bottom"}
-                      zoom={i !== 1}
-                      className="group relative overflow-hidden rounded-[2rem] border border-border shadow-[var(--shadow-soft)]"
-                    >
-                      <figure>
-                        <img
-                          src={step.image}
-                          alt={step.alt}
-                          loading="lazy"
-                          width={1280}
-                          height={960}
-                          className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-                        />
-                      </figure>
-                    </ImageReveal>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
-
-            <Reveal className="mt-14 text-center">
-              <CtaLink href="https://royalmedicalcenters.com/peptide-inquiry/">I'M READY!</CtaLink>
-            </Reveal>
-          </div>
-        </section>
+        <HowItWorksSection />
 
         {/* ---------------- About Dr. Rodriguez ---------------- */}
-        <section id="about" className="scroll-mt-24 py-20 md:py-28">
-          <div className="container-rmc grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-            <Reveal>
-              <div className="relative grid aspect-square place-items-center overflow-hidden rounded-[2rem] border border-border bg-surface">
-                <OrbitRing className="h-64 w-64 text-brand" duration={48} />
-                <div className="absolute grid place-items-center text-center">
-                  <Users className="h-10 w-10 text-brand" aria-hidden="true" />
-                  <p className="mt-3 font-display text-4xl font-bold">
-                    <Counter to={20} suffix="+" />
-                  </p>
-                  <p className="text-sm text-muted-foreground">Years pioneering HRT</p>
-                </div>
-              </div>
-            </Reveal>
-
-            <Reveal delay={0.1}>
-              <h2 className="text-3xl font-bold uppercase sm:text-4xl">
-                Dr. Rodriguez pioneered the hormone replacement therapy industry.
-              </h2>
-              <p className="mt-5 text-muted-foreground">
-                Dr. Rodriguez helped create an easy-to-understand payment plan, an all-inclusive
-                program that has been very successful for our patients. He has also helped develop
-                medications in collaboration with pharmacies nationwide, enabling men and women to
-                lead better lives.
-              </p>
-            </Reveal>
-          </div>
-        </section>
+        <AboutDoctorSection />
 
         {/* ---------------- Our commitment ---------------- */}
-        <section className="border-y border-border bg-surface py-20 md:py-28">
-          <div className="container-rmc">
-            <BlurReveal className="max-w-3xl">
-              <h2 className="text-3xl font-bold sm:text-4xl">Our Commitment</h2>
-              <p className="mt-4 text-muted-foreground">
-                We encourage prospective patients to research their options and make informed
-                healthcare decisions. Royal Medical Center provides personalized Hormone Replacement
-                Therapy Programs with transparent competitive pricing and licensed medical
-                supervision.
-              </p>
-            </BlurReveal>
-
-            <RevealGroup className="mt-10 grid gap-6 md:grid-cols-2">
-              {[
-                {
-                  icon: Activity,
-                  title: "Monitor Patient's Progress",
-                  body: "We closely monitor each patient's progress—whether in hormone therapy or weight loss programs—to ensure results are effective and levels reach their optimal range.",
-                },
-                {
-                  icon: Package,
-                  title: "No Fine Print",
-                  body: "We tell patients upfront what our programs cost. Unlike other clinics, there are no hidden costs or additional fees.",
-                },
-              ].map((c) => (
-                <RevealItem key={c.title}>
-                  <article className="surface-card h-full p-7 hover:-translate-y-1.5">
-                    <span
-                      className="grid h-12 w-12 place-items-center rounded-2xl"
-                      style={{ background: "var(--brand-soft)" }}
-                    >
-                      <c.icon className="h-6 w-6" aria-hidden="true" />
-                    </span>
-                    <h3 className="mt-5 text-xl font-semibold">{c.title}</h3>
-                    <p className="mt-2 text-sm text-muted-foreground">{c.body}</p>
-                  </article>
-                </RevealItem>
-              ))}
-            </RevealGroup>
-          </div>
-        </section>
+        <OurCommitment />
 
         {/* ---------------- Final CTA ---------------- */}
-        <section className="py-20 md:py-28">
-          <div className="container-rmc">
-            <Reveal>
-              <div className="relative overflow-hidden rounded-[2.5rem] border border-border bg-card p-10 text-center shadow-[var(--shadow-lift)] md:p-16">
-                <FloatingElement
-                  className="pointer-events-none absolute -bottom-24 left-1/2 h-72 w-[40rem] -translate-x-1/2"
-                  amplitude={12}
-                  duration={8}
-                >
-                  <div
-                    className="h-72 w-[40rem] rounded-full opacity-25 blur-3xl"
-                    style={{ background: "var(--gradient-brand)" }}
-                  />
-                </FloatingElement>
-                <h2 className="relative text-3xl font-bold sm:text-4xl">
-                  Ready to feel like yourself again?
-                </h2>
-                <p className="relative mx-auto mt-4 max-w-xl text-muted-foreground">
-                  Start with a comprehensive lab panel and a physician consultation. Transparent
-                  pricing from $67/mo, with your medication shipped discreetly to your door.
-                </p>
-                <div className="relative mt-8 flex flex-wrap justify-center gap-3">
-                  <CtaLink href="https://royalmedicalcenters.com/contact/#form">Get Started</CtaLink>
-                  <CtaLink href="tel:18006253837" variant="outline">
-                    Call 1-800-625-3837
-                  </CtaLink>
-                </div>
-              </div>
-            </Reveal>
-          </div>
-        </section>
+        <section><FinalCtaSection /></section>
 
         {/* ---------------- Disclaimers ---------------- */}
-        <section aria-labelledby="disclaimers" className="border-t border-border bg-surface py-14">
-          <div className="container-rmc">
-            <h2 id="disclaimers" className="text-lg font-semibold">
-              FDA & Compounding Disclaimers
-            </h2>
-            <ol className="mt-4 space-y-3 text-xs leading-relaxed text-muted-foreground">
-              {DISCLAIMERS.map((d, i) => (
-                <li key={i} className="flex gap-3">
-                  <span className="font-semibold text-foreground">{i + 1}.</span>
-                  <span>{d}</span>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </section>
+        <DisclaimersSection />
       </main>
       <Footer />
     </div>
+  );
+}
+
+function WhyUsSection() {
+  const targetRef = useRef<HTMLDivElement>(null);
+  
+  return (
+    <section id="why-us" className="scroll-mt-24 relative bg-background" ref={targetRef}>
+      {/* Background SvgMorphPath (using simple GlowOrb for this demo to simulate the organic shapes) */}
+      <GlowOrb className="absolute top-1/2 left-1/4 w-[40rem] h-[40rem] -translate-y-1/2 opacity-20" />
+      
+      <div className="container-rmc py-20 md:py-28">
+        <div className="grid gap-12 lg:grid-cols-2 lg:items-start relative">
+          
+          {/* Sticky left side */}
+          <div className="lg:sticky lg:top-32 lg:h-[calc(100vh-16rem)] flex flex-col justify-center">
+            <Reveal>
+              <h2 className="text-3xl font-bold sm:text-4xl lg:text-5xl leading-tight">
+                Why Royal Medical Center?
+              </h2>
+              <p className="mt-6 text-muted-foreground text-lg max-w-md">
+                We're committed to making your hormone therapy and weight management journey seamless, transparent, and affordable.
+              </p>
+            </Reveal>
+            
+            <div className="mt-12">
+              <ScrollWipe direction="right">
+                <div className="relative overflow-hidden rounded-[2rem] border border-border shadow-[var(--shadow-lift)] max-w-md aspect-4/3">
+                  <img
+                    src={consultRoom}
+                    alt="Bright, modern Royal Medical Center consultation room"
+                    loading="lazy"
+                    className="h-full w-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                </div>
+              </ScrollWipe>
+            </div>
+          </div>
+
+          {/* Scrolling right side (Benefits) */}
+          <div className="space-y-12 lg:space-y-32 py-10 lg:py-[20vh]">
+            
+            <RevealItem y={40}>
+              <div className="surface-card p-8 lg:p-10 relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-brand/10 rounded-bl-full transition-transform duration-500 group-hover:scale-110" />
+                <div className="flex items-center gap-4 mb-6">
+                  <span className="grid h-14 w-14 place-items-center rounded-2xl bg-brand/10 text-brand relative">
+                    <ShieldCheck className="h-7 w-7 relative z-10" />
+                  </span>
+                  <h3 className="text-2xl font-semibold">Low Price Guarantee</h3>
+                </div>
+                <p className="text-muted-foreground text-lg leading-relaxed">
+                  We're confident in our competitive pricing. If you find another clinic that is equal to ours for a better price, 
+                  <strong className="text-foreground"> we will beat their price by 25%</strong>. No questions asked.
+                </p>
+              </div>
+            </RevealItem>
+
+            <RevealItem y={40}>
+              <div className="surface-card p-8 lg:p-10 relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-brand/10 rounded-bl-full transition-transform duration-500 group-hover:scale-110" />
+                <div className="flex items-center gap-4 mb-6">
+                  <span className="grid h-14 w-14 place-items-center rounded-2xl bg-brand/10 text-brand relative">
+                    <AnimatedCheck className="h-7 w-7 relative z-10" />
+                  </span>
+                  <h3 className="text-2xl font-semibold">No Hidden Fees</h3>
+                </div>
+                <p className="text-muted-foreground text-lg leading-relaxed">
+                  Our pricing is all-inclusive, covering everything you need. 
+                  This includes your <strong className="text-foreground">lab testing, medications, physicals, and doctor consultations</strong>. 
+                  No surprises, ever.
+                </p>
+              </div>
+            </RevealItem>
+
+            <RevealItem y={40}>
+              <div className="surface-card p-8 lg:p-10 relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-brand/10 rounded-bl-full transition-transform duration-500 group-hover:scale-110" />
+                <div className="flex items-center gap-4 mb-6">
+                  <span className="grid h-14 w-14 place-items-center rounded-2xl bg-brand/10 text-brand relative">
+                    <Stethoscope className="h-7 w-7 relative z-10" />
+                  </span>
+                  <h3 className="text-2xl font-semibold">Licensed Physicians</h3>
+                </div>
+                <p className="text-muted-foreground text-lg leading-relaxed">
+                  Your health is our top priority. All our programs are prescribed and monitored by 
+                  <strong className="text-foreground"> licensed medical professionals</strong> who specialize in hormone and peptide therapies.
+                </p>
+              </div>
+            </RevealItem>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ServicesSection() {
+  const [activeIdx, setActiveIdx] = useState(0);
+
+  return (
+    <section id="services" className="scroll-mt-24 py-20 md:py-28 relative">
+      <div className="container-rmc">
+        <Reveal className="max-w-2xl mb-16">
+          <h2 className="text-3xl font-bold sm:text-4xl">
+            Hormone & Weight Management Services
+          </h2>
+          <p className="mt-3 text-muted-foreground text-lg">
+            Physician-designed programs for men and women, backed by comprehensive labs and
+            ongoing monitoring.
+          </p>
+          <WellnessWave className="mt-6 h-8 w-full max-w-md text-brand" />
+        </Reveal>
+
+        <div className="grid lg:grid-cols-[1fr_1.5fr] gap-8">
+          
+          {/* Tabs */}
+          <div className="flex flex-col gap-4">
+            {SERVICES.map((s, idx) => {
+              const isActive = activeIdx === idx;
+              return (
+                <button
+                  key={s.title}
+                  onClick={() => setActiveIdx(idx)}
+                  className={`text-left p-6 rounded-[2rem] border transition-all duration-300 relative overflow-hidden group
+                    ${isActive ? "border-brand bg-card shadow-[var(--shadow-brand)]" : "border-border bg-surface hover:border-brand/50 hover:bg-card opacity-70 grayscale-[0.5]"}
+                  `}
+                >
+                  <div className="flex items-center gap-4 relative z-10">
+                    <span
+                      className={`grid h-14 w-14 place-items-center rounded-2xl transition-colors duration-300 ${isActive ? "bg-brand text-accent-foreground" : "bg-muted text-muted-foreground group-hover:text-brand"}`}
+                    >
+                      <motion.div animate={isActive ? { rotate: [0, 10, -10, 0] } : {}} transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}>
+                        <s.icon className="h-6 w-6" aria-hidden="true" />
+                      </motion.div>
+                    </span>
+                    <h3 className={`text-xl font-semibold transition-colors ${isActive ? "text-foreground" : "text-muted-foreground group-hover:text-foreground"}`}>
+                      {s.title}
+                    </h3>
+                  </div>
+                  
+                  {isActive && (
+                    <motion.div 
+                      layoutId="activeTabIndicator" 
+                      className="absolute inset-0 border-2 border-brand rounded-[2rem]" 
+                      initial={false}
+                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Active Content Panel */}
+          <div className="relative">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeIdx}
+                initial={{ opacity: 0, y: 20, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -20, scale: 0.98 }}
+                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                className="surface-card p-8 lg:p-12 h-full flex flex-col justify-center relative overflow-hidden"
+              >
+                {/* Decorative large icon background */}
+                <div className="absolute -bottom-10 -right-10 opacity-[0.03] pointer-events-none">
+                  {(() => {
+                    const Icon = SERVICES[activeIdx].icon;
+                    return <Icon className="w-96 h-96" />;
+                  })()}
+                </div>
+
+                <h3 className="text-3xl lg:text-4xl font-bold mb-8">
+                  {SERVICES[activeIdx].title}
+                </h3>
+                
+                <ul className="space-y-6">
+                  {SERVICES[activeIdx].points.map((p, i) => (
+                    <motion.li 
+                      key={p} 
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.2 + (i * 0.1) }}
+                      className="flex gap-4 items-start text-lg text-muted-foreground"
+                    >
+                      <AnimatedCheck className="h-7 w-7 shrink-0 text-brand mt-0.5" />
+                      <span>{p}</span>
+                    </motion.li>
+                  ))}
+                </ul>
+
+                <div className="mt-12">
+                  <CtaLink href="https://royalmedicalcenters.com/contact/#form">Learn more</CtaLink>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function HowItWorksSection() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start center", "end center"],
+  });
+
+  return (
+    <section
+      id="how-it-works"
+      className="scroll-mt-24 border-y border-border py-20 md:py-28 relative overflow-hidden"
+      style={{ background: "var(--gradient-brand-subtle)" }}
+    >
+      {/* Subtle grid background */}
+      <PulsingGrid className="absolute inset-0 opacity-10" />
+
+      <div className="container-rmc relative z-10">
+        <Reveal className="mx-auto max-w-2xl text-center">
+          <h2 className="text-3xl font-bold sm:text-4xl">How Our Programs Work</h2>
+          <p className="mt-3 text-muted-foreground">
+            Your journey to optimal health is simple, transparent, and fully supported by our
+            medical team.
+          </p>
+        </Reveal>
+
+        <div className="mt-20 relative max-w-5xl mx-auto" ref={containerRef}>
+          {/* Vertical scroll-linked line for desktop */}
+          <div className="hidden lg:block absolute left-1/2 top-0 bottom-0 w-1 -translate-x-1/2 bg-brand/10">
+            <motion.div 
+              className="absolute top-0 left-0 w-full bg-brand origin-top"
+              style={{ scaleY: scrollYProgress, height: "100%" }}
+            />
+          </div>
+
+          <div className="space-y-24 lg:space-y-32">
+            {STEPS.map((step, idx) => {
+              const isEven = idx % 2 === 0;
+              return (
+                <div key={step.title} className="relative flex flex-col lg:flex-row items-center gap-12 lg:gap-24">
+                  {/* Center Node (Desktop) */}
+                  <div className="hidden lg:grid absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-16 h-16 place-items-center rounded-full bg-card border-4 border-brand shadow-lg">
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      whileInView={{ scale: 1 }}
+                      transition={{ type: "spring", stiffness: 300, damping: 15, delay: 0.2 }}
+                      className="text-xl font-bold text-brand"
+                    >
+                      {idx + 1}
+                    </motion.div>
+                  </div>
+
+                  {/* Left content or Right content depending on odd/even */}
+                  <div className={`w-full lg:w-1/2 ${isEven ? 'lg:text-right lg:pr-12' : 'lg:order-2 lg:pl-12'}`}>
+                    <RevealItem x={isEven ? -40 : 40} y={0}>
+                      <span className="font-display text-sm font-bold tracking-[0.3em] text-brand">
+                        STEP {idx + 1}
+                      </span>
+                      <h3 className="mt-3 text-2xl font-bold sm:text-3xl">{step.title}</h3>
+                      <p className="mt-4 text-muted-foreground text-lg leading-relaxed">{step.body}</p>
+                    </RevealItem>
+                  </div>
+
+                  {/* Image side */}
+                  <div className={`w-full lg:w-1/2 ${isEven ? 'lg:order-2 lg:pl-12' : 'lg:text-right lg:pr-12'}`}>
+                    <RevealItem x={isEven ? 40 : -40} y={0} delay={0.1}>
+                      <div className="relative rounded-[2rem] overflow-hidden border border-border shadow-[var(--shadow-soft)] aspect-4/3 group">
+                        <motion.img
+                          whileHover={{ scale: 1.05 }}
+                          transition={{ duration: 0.7, ease: "easeOut" }}
+                          src={step.image}
+                          alt={step.alt}
+                          loading="lazy"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    </RevealItem>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <Reveal delay={0.3} className="mt-20 text-center relative z-10">
+          <CtaLink href="https://royalmedicalcenters.com/contact/#form" className="group">
+            <span className="flex items-center gap-2">
+              Start Your Journey
+              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+            </span>
+          </CtaLink>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function FinalCtaSection() {
+  return (
+    <section className="relative overflow-hidden py-32 md:py-48 text-center border-t border-border">
+      <PulsingGrid className="absolute inset-0 opacity-20" />
+      <GlowOrb className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60rem] h-[60rem] opacity-30" />
+      
+      <div className="container-rmc relative z-10 flex flex-col items-center">
+        <Reveal>
+          <div className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-4 py-2 text-sm font-semibold text-brand tracking-wide mb-8">
+            <Sparkles className="w-4 h-4" /> Nationwide Telehealth
+          </div>
+        </Reveal>
+        
+        <Reveal delay={0.1}>
+          <h2 className="text-4xl font-bold sm:text-5xl md:text-6xl max-w-3xl leading-tight">
+            Ready to feel like <span className="text-brand">yourself</span> again?
+          </h2>
+        </Reveal>
+
+        <Reveal delay={0.2}>
+          <p className="mx-auto mt-6 max-w-xl text-lg text-muted-foreground md:text-xl">
+            Start with a comprehensive lab panel and a physician consultation. Transparent
+            pricing from $67/mo, with your medication shipped discreetly to your door.
+          </p>
+        </Reveal>
+
+        <Reveal delay={0.3} className="mt-12 flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+          <CtaLink href="https://royalmedicalcenters.com/contact/#form">
+            Start Your Transformation
+          </CtaLink>
+          <CtaLink href="tel:18006253837" variant="outline">
+            Call 1-800-625-3837
+          </CtaLink>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+
+function AboutDoctorSection() {
+  return (
+    <section id="about" className="scroll-mt-24 py-24 md:py-36 relative overflow-hidden">
+      <div className="container-rmc relative z-10">
+        <div className="grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:items-center">
+          
+          <div className="relative h-full min-h-[400px] rounded-[2.5rem] bg-surface border border-border overflow-hidden">
+            <SvgMorphPath className="absolute inset-0 text-brand opacity-10" />
+            <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center">
+              <FloatingElement amplitude={15} duration={6}>
+                <div className="relative grid place-items-center">
+                  <div className="absolute inset-0 bg-brand/20 blur-2xl rounded-full" />
+                  <div className="relative h-32 w-32 rounded-full border border-brand/30 bg-card shadow-[0_8px_30px_rgba(var(--brand-rgb),0.15)] grid place-items-center mb-6">
+                    <span className="font-display text-4xl font-bold text-foreground">
+                      <Counter to={20} suffix="+" />
+                    </span>
+                  </div>
+                </div>
+              </FloatingElement>
+              <Reveal delay={0.2}>
+                <h3 className="text-xl font-bold tracking-tight">Years of Excellence</h3>
+                <p className="mt-2 text-sm text-muted-foreground uppercase tracking-widest font-medium">
+                  Pioneering HRT
+                </p>
+              </Reveal>
+            </div>
+          </div>
+
+          <div className="lg:pl-8">
+            <Reveal>
+              <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold tracking-wide mb-8">
+                <BadgeCheck className="w-4 h-4 text-brand" /> Trusted Authority
+              </div>
+            </Reveal>
+            
+            <Reveal delay={0.1}>
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-serif leading-[1.1] tracking-tight">
+                DR. RODRIGUEZ PIONEERED THE HORMONE REPLACEMENT THERAPY INDUSTRY.
+              </h2>
+            </Reveal>
+
+            <Reveal delay={0.2} className="mt-8 space-y-6 text-lg text-muted-foreground leading-relaxed">
+              <p>
+                Dr. Rodriguez helped create an easy-to-understand payment plan, an all-inclusive program that has been very successful for our patients. He has also helped develop medications in collaboration with pharmacies nationwide, enabling men and women to lead better lives.
+              </p>
+            </Reveal>
+          </div>
+          
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function CommitmentSection() {
+  return (
+    <section className="relative overflow-hidden py-24 md:py-36 bg-foreground text-background">
+      <div className="absolute inset-0 opacity-40 mix-blend-screen pointer-events-none">
+        <GlowOrb className="absolute -top-40 -right-40 w-[50rem] h-[50rem] opacity-50" />
+        <GlowOrb className="absolute -bottom-40 -left-40 w-[40rem] h-[40rem] opacity-30 text-blue-500" />
+      </div>
+
+      <div className="container-rmc relative z-10">
+        <div className="max-w-3xl mx-auto text-center mb-16">
+          <Reveal>
+            <div className="inline-flex items-center gap-2 rounded-full border border-background/20 bg-background/10 px-4 py-2 text-sm font-semibold text-brand-foreground tracking-wide mb-6 backdrop-blur">
+              <ShieldCheck className="w-4 h-4" /> The Royal Promise
+            </div>
+            <h2 className="text-4xl font-bold sm:text-5xl lg:text-6xl text-background">Our Commitment</h2>
+            <p className="mt-6 text-lg text-background/70 md:text-xl">
+              We encourage prospective patients to research their options and make informed
+              healthcare decisions. Royal Medical Center provides personalized Hormone Replacement
+              Therapy Programs with transparent competitive pricing and licensed medical
+              supervision.
+            </p>
+          </Reveal>
+        </div>
+
+        <RevealGroup className="grid gap-6 md:grid-cols-2 max-w-5xl mx-auto">
+          {[
+            {
+              icon: Activity,
+              title: "Monitor Patient's Progress",
+              body: "We closely monitor each patient's progress—whether in hormone therapy or weight loss programs—to ensure results are effective and levels reach their optimal range.",
+            },
+            {
+              icon: Package,
+              title: "No Fine Print",
+              body: "We tell patients upfront what our programs cost. Unlike other clinics, there are no hidden costs or additional fees.",
+            },
+          ].map((c) => (
+            <RevealItem key={c.title}>
+              <MouseParallax strength={0.03} className="h-full">
+                <article className="relative h-full overflow-hidden rounded-[2.5rem] border border-background/10 bg-background/5 p-10 backdrop-blur-xl transition-all duration-300 hover:bg-background/10">
+                  <div className="absolute inset-0 bg-gradient-to-br from-brand/20 to-transparent opacity-0 transition-opacity duration-500 hover:opacity-100" />
+                  <div className="relative z-10">
+                    <div className="inline-grid h-16 w-16 place-items-center rounded-2xl bg-brand/20 shadow-[0_0_20px_rgba(var(--brand-rgb),0.3)]">
+                      <c.icon className="h-8 w-8 text-brand-foreground" aria-hidden="true" />
+                    </div>
+                    <h3 className="mt-8 text-2xl font-bold text-background">{c.title}</h3>
+                    <p className="mt-4 text-background/70 leading-relaxed text-lg">{c.body}</p>
+                  </div>
+                </article>
+              </MouseParallax>
+            </RevealItem>
+          ))}
+        </RevealGroup>
+      </div>
+    </section>
+  );
+}
+
+function DisclaimersSection() {
+  return (
+    <section aria-labelledby="disclaimers" className="border-t border-border/10 bg-foreground text-background py-16 relative overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,var(--brand-soft)_0%,transparent_50%)] opacity-10 pointer-events-none mix-blend-screen" />
+      <div className="container-rmc relative z-10">
+        <Reveal>
+          <div className="flex items-center gap-3 mb-8">
+            <div className="grid h-10 w-10 place-items-center rounded-full bg-background/5 border border-background/10">
+              <ShieldCheck className="h-5 w-5 text-background/60" aria-hidden="true" />
+            </div>
+            <h2 id="disclaimers" className="text-xl font-bold tracking-tight">
+              FDA & Compounding Disclaimers
+            </h2>
+          </div>
+        </Reveal>
+        
+        <RevealGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {DISCLAIMERS.map((d, i) => (
+            <RevealItem key={i}>
+              <div className="h-full rounded-2xl border border-background/10 bg-background/5 p-6 backdrop-blur transition-colors hover:bg-background/10">
+                <span className="text-brand-foreground font-bold text-lg mb-2 block opacity-80">0{i + 1}</span>
+                <p className="text-xs leading-relaxed text-background/70">{d}</p>
+              </div>
+            </RevealItem>
+          ))}
+        </RevealGroup>
+      </div>
+    </section>
   );
 }

@@ -5,9 +5,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --font-sans:
-    "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-display: "Sora", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Sofia pro web", sans-serif;
+  --font-display: "Sofia pro web", sans-serif;
 }
 
 
@@ -160,6 +159,86 @@
   --color-brand-soft: var(--brand-soft);
   --color-ink: var(--ink);
   --color-surface: var(--surface);
+  --color-glass: var(--glass);
+  --color-glass-border: var(--glass-border);
+
+  --animate-breathe: breathe 11s ease-in-out infinite;
+  --animate-drift: drift 9s ease-in-out infinite;
+  --animate-orbit: orbit 60s linear infinite;
+  --animate-orbit-reverse: orbit-reverse 60s linear infinite;
+  --animate-rise: rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-balance-a: balance-a 9s ease-in-out infinite;
+  --animate-balance-b: balance-b 11s ease-in-out infinite;
+  --animate-core-pulse: core-pulse 5s ease-in-out infinite;
+
+  @keyframes breathe {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.018);
+    }
+  }
+  @keyframes drift {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(0, -10px, 0);
+    }
+  }
+  @keyframes orbit {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes orbit-reverse {
+    to {
+      transform: rotate(-360deg);
+    }
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 22px, 0);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes balance-a {
+    0%,
+    100% {
+      transform: translate3d(-2.5%, 1.5%, 0) scale(1);
+    }
+    50% {
+      transform: translate3d(2%, -2%, 0) scale(1.04);
+    }
+  }
+  @keyframes balance-b {
+    0%,
+    100% {
+      transform: translate3d(2.5%, -1.5%, 0) scale(1.03);
+    }
+    50% {
+      transform: translate3d(-2%, 2%, 0) scale(0.98);
+    }
+  }
+  @keyframes core-pulse {
+    0%,
+    100% {
+      opacity: 0.55;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.95;
+      transform: scale(1.12);
+    }
+  }
 }
 
 :root {
@@ -192,6 +271,9 @@
   --shadow-soft: 0 1px 2px oklch(0.19 0.02 150 / 0.04), 0 12px 32px -12px oklch(0.19 0.02 150 / 0.12);
   --shadow-lift: 0 24px 60px -24px oklch(0.19 0.02 150 / 0.28);
   --shadow-brand: 0 18px 40px -18px oklch(0.86 0.21 131 / 0.6);
+  --shadow-float: 0 2px 6px oklch(0.19 0.02 150 / 0.06), 0 30px 70px -30px oklch(0.19 0.02 150 / 0.34);
+  --glass: oklch(1 0 0 / 62%);
+  --glass-border: oklch(1 0 0 / 70%);
 }
 
 @layer base {
@@ -254,4 +336,112 @@
 }
 @keyframes rmc-draw {
   to { stroke-dashoffset: 0; }
+}
+
+@utility glass-panel {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(18px) saturate(150%);
+  box-shadow: var(--shadow-float);
+}
+
+@keyframes rmc-image-in {
+  from {
+    opacity: 0;
+    transform: scale(1.04) translateX(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes rmc-orbit-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rmc-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes rmc-swap-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes rmc-dash {
+  from {
+    stroke-dashoffset: 600;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.rmc-orbit {
+  animation: rmc-orbit-spin 42s linear infinite;
+}
+
+.rmc-orbit-reverse {
+  animation: rmc-orbit-spin 60s linear infinite reverse;
+}
+
+.rmc-draw {
+  stroke-dasharray: 600;
+  animation: rmc-dash 2.4s ease-out both;
+}
+
+.rmc-reveal .rmc-item {
+  opacity: 0;
+}
+
+.rmc-reveal[data-visible="true"] .rmc-item {
+  animation: rmc-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.rmc-reveal[data-visible="true"] .rmc-item:nth-child(2) {
+  animation-delay: 0.1s;
+}
+.rmc-reveal[data-visible="true"] .rmc-item:nth-child(3) {
+  animation-delay: 0.2s;
+}
+.rmc-reveal[data-visible="true"] .rmc-item:nth-child(4) {
+  animation-delay: 0.3s;
+}
+
+.rmc-swap {
+  animation: rmc-swap-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.rmc-swap-image {
+  animation: rmc-image-in 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rmc-orbit,
+  .rmc-orbit-reverse,
+  .rmc-draw,
+  .rmc-swap,
+  .rmc-swap-image,
+  .rmc-reveal[data-visible="true"] .rmc-item {
+    animation: none !important;
+  }
+  .rmc-reveal .rmc-item {
+    opacity: 1;
+  }
 }

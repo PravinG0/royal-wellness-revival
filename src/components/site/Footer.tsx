@@ -1,6 +1,6 @@
-import { Facebook, Instagram, Mail, MapPin, Phone, Twitter } from "lucide-react";
+import { Facebook, Instagram, Mail, MapPin, Phone, Twitter, ArrowRight, Activity } from "lucide-react";
 import { motion } from "motion/react";
-import { Reveal, StaggerContainer, StaggerItem, WellnessWave } from "@/components/site/motion-primitives";
+import { Reveal, StaggerContainer, StaggerItem, GlowOrb } from "@/components/site/motion-primitives";
 
 const IMPORTANT = [
   ["Home", "https://royalmedicalcenters.com/"],
@@ -31,32 +31,43 @@ const PROGRAMS = [
 
 export function Footer() {
   return (
-    <footer className="border-t border-border bg-secondary/50">
-      <WellnessWave className="container-rmc h-10 w-full text-brand/40" />
-      <div className="container-rmc grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-4">
+    <footer className="relative overflow-hidden border-t border-border/10 bg-foreground text-background pt-24 pb-12">
+      <div className="absolute inset-0 opacity-30 mix-blend-screen pointer-events-none">
+        <GlowOrb className="absolute -top-40 -left-40 w-[40rem] h-[40rem] opacity-40 text-brand" />
+        <GlowOrb className="absolute top-1/2 -right-40 w-[30rem] h-[30rem] opacity-20 text-blue-500" />
+      </div>
+
+      <div className="container-rmc relative z-10 grid gap-16 md:grid-cols-2 lg:grid-cols-4 lg:gap-12">
         <Reveal>
-          <h2 className="text-lg font-semibold">Contact Us</h2>
-          <address className="mt-4 space-y-3 text-sm text-muted-foreground not-italic">
-            <p className="flex gap-2">
-              <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-foreground" aria-hidden="true" />
-              1000 E Hillsboro Blvd, Suite 102
-              <br />
-              Deerfield Beach, FL 33441
+          <div className="flex items-center gap-3 mb-6">
+             <div className="grid h-12 w-12 place-items-center rounded-2xl bg-brand/20 shadow-[0_0_20px_rgba(var(--brand-rgb),0.3)]">
+                <Activity className="h-6 w-6 text-brand-foreground" aria-hidden="true" />
+             </div>
+             <span className="text-xl font-bold tracking-tight">Royal Medical<br/><span className="text-xs tracking-[0.3em] uppercase text-background/60">Center</span></span>
+          </div>
+          
+          <address className="space-y-4 text-sm text-background/70 not-italic leading-relaxed">
+            <p className="flex items-start gap-3">
+              <MapPin className="mt-1 h-4 w-4 shrink-0 text-brand-foreground" aria-hidden="true" />
+              <span>
+                1000 E Hillsboro Blvd, Suite 102<br />
+                Deerfield Beach, FL 33441
+              </span>
             </p>
-            <p className="flex items-center gap-2">
-              <Phone className="h-4 w-4 text-foreground" aria-hidden="true" />
-              <a className="hover:text-foreground" href="tel:18006253837">1-800-625-3837</a>
+            <p className="flex items-center gap-3 group">
+              <Phone className="h-4 w-4 text-brand-foreground transition-transform group-hover:scale-110" aria-hidden="true" />
+              <a className="transition-colors hover:text-white" href="tel:18006253837">1-800-625-3837</a>
             </p>
-            <p className="flex items-center gap-2">
-              <Mail className="h-4 w-4 text-foreground" aria-hidden="true" />
-              <a className="hover:text-foreground" href="mailto:info@rmmcenter.com">info@rmmcenter.com</a>
-            </p>
-            <p className="pl-6">
-              <a className="hover:text-foreground" href="mailto:jianna@rmmcenter.com">jianna@rmmcenter.com</a>
+            <p className="flex items-center gap-3 group">
+              <Mail className="h-4 w-4 text-brand-foreground transition-transform group-hover:scale-110" aria-hidden="true" />
+              <span>
+                <a className="transition-colors hover:text-white" href="mailto:info@rmmcenter.com">info@rmmcenter.com</a>
+                {" "} (or <a className="transition-colors hover:text-white" href="mailto:jianna@rmmcenter.com">jianna@rmmcenter.com</a>)
+              </span>
             </p>
           </address>
 
-          <div className="mt-5 flex gap-2">
+          <div className="mt-8 flex gap-3">
             {[
               [Facebook, "Facebook", "https://www.facebook.com/royalmedicalcenters/"],
               [Twitter, "X (Twitter)", "https://twitter.com/rmmcenter"],
@@ -70,21 +81,73 @@ export function Footer() {
                   aria-label={label as string}
                   target="_blank"
                   rel="noreferrer noopener"
-                  whileHover={{ y: -3, scale: 1.06 }}
+                  whileHover={{ y: -4, scale: 1.1, backgroundColor: "rgba(255,255,255,0.15)" }}
                   whileTap={{ scale: 0.95 }}
-                  transition={{ type: "spring", stiffness: 380, damping: 20 }}
-                  className="grid h-10 w-10 place-items-center rounded-full border border-border bg-card hover:border-brand"
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                  className="grid h-12 w-12 place-items-center rounded-full border border-background/20 bg-background/5 text-background/80 hover:text-white hover:border-background/40 backdrop-blur"
                 >
-                  <I className="h-4 w-4" aria-hidden="true" />
+                  <I className="h-5 w-5" aria-hidden="true" />
                 </motion.a>
               );
             })}
           </div>
+        </Reveal>
 
-          <p className="mt-6 text-sm text-muted-foreground">
+        <nav aria-label="Important links" className="lg:pl-8">
+          <Reveal>
+            <h2 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
+              <span className="w-8 h-[1px] bg-brand-foreground" />
+              Important Links
+            </h2>
+          </Reveal>
+          <StaggerContainer className="space-y-3 text-sm" stagger={0.05}>
+            {IMPORTANT.map(([label, href]) => (
+              <StaggerItem key={href}>
+                <a
+                  href={href}
+                  className="group flex items-center gap-2 text-background/60 transition-colors hover:text-white"
+                >
+                  <ArrowRight className="h-3 w-3 -translate-x-2 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100 text-brand-foreground" aria-hidden="true" />
+                  <span className="-translate-x-5 transition-transform duration-300 group-hover:translate-x-0">{label}</span>
+                </a>
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
+        </nav>
+
+        <nav aria-label="Programs & Services" className="lg:col-span-2 lg:pl-12">
+          <Reveal>
+            <h2 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
+              <span className="w-8 h-[1px] bg-brand-foreground" />
+              Programs & Services
+            </h2>
+          </Reveal>
+          <StaggerContainer
+            className="grid gap-x-8 gap-y-3 text-sm sm:grid-cols-2"
+            stagger={0.03}
+          >
+            {PROGRAMS.map(([label, href]) => (
+              <StaggerItem key={href}>
+                <a
+                  href={href}
+                  className="group flex items-center gap-2 text-background/60 transition-colors hover:text-white"
+                >
+                  <ArrowRight className="h-3 w-3 -translate-x-2 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100 text-brand-foreground" aria-hidden="true" />
+                  <span className="-translate-x-5 transition-transform duration-300 group-hover:translate-x-0">{label}</span>
+                </a>
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
+        </nav>
+      </div>
+
+      <Reveal delay={0.4}>
+        <div className="container-rmc mt-24 border-t border-background/10 pt-8 flex flex-col items-center justify-between gap-4 sm:flex-row text-xs text-background/50 relative z-10">
+          <p>© {new Date().getFullYear()} Royal Medical Center. All rights reserved.</p>
+          <p>
             Dispensing Pharmacy:{" "}
             <a
-              className="font-medium text-foreground underline underline-offset-4"
+              className="text-white hover:underline hover:text-brand-foreground transition-colors"
               href="https://www.belmarpharmasolutions.com/"
               target="_blank"
               rel="noreferrer noopener"
@@ -92,40 +155,8 @@ export function Footer() {
               Belmar Pharma Solutions
             </a>
           </p>
-        </Reveal>
-
-        <nav aria-label="Important links">
-          <h2 className="text-lg font-semibold">Important Links</h2>
-          <StaggerContainer className="mt-4 space-y-2.5 text-sm text-muted-foreground" stagger={0.04}>
-            {IMPORTANT.map(([label, href]) => (
-              <StaggerItem key={label} y={10} scale={1}>
-                <a className="transition-colors hover:text-foreground" href={href}>
-                  {label}
-                </a>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
-        </nav>
-
-        <nav aria-label="Program links" className="lg:col-span-2">
-          <h2 className="text-lg font-semibold">Programs</h2>
-          <StaggerContainer className="mt-4 grid gap-2.5 text-sm text-muted-foreground sm:grid-cols-2" stagger={0.03}>
-            {PROGRAMS.map(([label, href]) => (
-              <StaggerItem key={label} y={10} scale={1}>
-                <a className="transition-colors hover:text-foreground" href={href}>
-                  {label}
-                </a>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
-        </nav>
-      </div>
-
-      <div className="border-t border-border py-6">
-        <p className="container-rmc text-center text-xs text-muted-foreground">
-          Copyright © 2026 Royal Medical Center. All rights reserved.
-        </p>
-      </div>
+        </div>
+      </Reveal>
     </footer>
   );
 }

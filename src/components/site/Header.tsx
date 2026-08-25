@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ArrowRight, Menu, Phone, X } from "lucide-react";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
+import { ScrollProgress } from "./motion-primitives";
 
 const NAV = [
   { label: "Programs", href: "#programs" },
@@ -156,6 +157,9 @@ export function Header() {
           </motion.div>
         )}
       </AnimatePresence>
+      <div className="absolute bottom-0 left-0 w-full h-[2px]">
+        <ScrollProgress />
+      </div>
     </motion.header>
   );
 }
