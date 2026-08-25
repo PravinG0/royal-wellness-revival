@@ -693,5 +693,3 @@ function CommitmentSection() {
     </section>
   );
 }
-  );
-}
