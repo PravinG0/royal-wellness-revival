@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   motion,
   useInView,
@@ -7,6 +7,7 @@ import {
   useScroll,
   useSpring,
   useTransform,
+  type MotionStyle,
   type Transition,
 } from "motion/react";
 
@@ -157,7 +158,7 @@ export function ImageReveal({
   from?: "bottom" | "left" | "none";
   delay?: number;
   zoom?: boolean;
-  style?: CSSProperties | undefined;
+  style?: MotionStyle | undefined;
 }) {
   const reduced = useReducedMotion();
   const clipFrom =
@@ -203,7 +204,7 @@ export function FloatingElement({
   amplitude?: number;
   duration?: number;
   delay?: number;
-  style?: CSSProperties | undefined;
+  style?: MotionStyle | undefined;
 }) {
   const reduced = useReducedMotion();
   if (reduced) return <div className={className} style={style}>{children}</div>;
@@ -267,7 +268,7 @@ export function ParallaxElement({
   children: ReactNode;
   className?: string;
   distance?: number;
-  style?: CSSProperties | undefined;
+  style?: MotionStyle | undefined;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
@@ -296,7 +297,7 @@ export function MouseParallax({
   children: ReactNode;
   className?: string;
   strength?: number;
-  style?: CSSProperties | undefined;
+  style?: MotionStyle | undefined;
 }) {
   const reduced = useReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
