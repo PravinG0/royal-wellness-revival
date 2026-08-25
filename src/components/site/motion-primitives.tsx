@@ -7,7 +7,6 @@ import {
   useScroll,
   useSpring,
   useTransform,
-  type MotionStyle,
   type Transition,
 } from "motion/react";
 
@@ -151,14 +150,12 @@ export function ImageReveal({
   from = "bottom",
   delay = 0,
   zoom = true,
-  style,
 }: {
   children: ReactNode;
   className?: string;
   from?: "bottom" | "left" | "none";
   delay?: number;
   zoom?: boolean;
-  style?: MotionStyle | undefined;
 }) {
   const reduced = useReducedMotion();
   const clipFrom =
@@ -170,7 +167,7 @@ export function ImageReveal({
 
   if (reduced) {
     return (
-      <motion.div className={className} style={style} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={viewportOnce} transition={{ duration: 0.3 }}>
+      <motion.div className={className} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={viewportOnce} transition={{ duration: 0.3 }}>
         {children}
       </motion.div>
     );
@@ -179,7 +176,6 @@ export function ImageReveal({
   return (
     <motion.div
       className={className}
-      style={style}
       initial={{ opacity: 0, clipPath: clipFrom, scale: zoom ? 1.06 : 1 }}
       whileInView={{ opacity: 1, clipPath: "inset(0% 0% 0% 0% round var(--radius-4xl))", scale: 1 }}
       viewport={viewportOnce}
@@ -197,21 +193,18 @@ export function FloatingElement({
   amplitude = 8,
   duration = 5,
   delay = 0,
-  style,
 }: {
   children: ReactNode;
   className?: string;
   amplitude?: number;
   duration?: number;
   delay?: number;
-  style?: MotionStyle | undefined;
 }) {
   const reduced = useReducedMotion();
-  if (reduced) return <div className={className} style={style}>{children}</div>;
+  if (reduced) return <div className={className}>{children}</div>;
   return (
     <motion.div
       className={className}
-      style={style}
       animate={{ y: [0, -amplitude, 0] }}
       transition={{ duration, delay, repeat: Infinity, ease: "easeInOut" }}
     >
@@ -238,7 +231,7 @@ export function DrawSVG({
   delay?: number;
   strokeWidth?: number;
   dashed?: boolean;
-} & { style?: CSSProperties }) {
+) {
   const reduced = useReducedMotion();
   return (
     <svg viewBox={viewBox} className={className} fill="none" aria-hidden="true" {...rest}>
@@ -263,12 +256,10 @@ export function ParallaxElement({
   children,
   className,
   distance = 40,
-  style,
 }: {
   children: ReactNode;
   className?: string;
   distance?: number;
-  style?: MotionStyle | undefined;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
@@ -277,7 +268,7 @@ export function ParallaxElement({
   const y = useSpring(raw, { stiffness: 60, damping: 20, mass: 0.4 });
 
   return (
-    <div ref={ref} className={className} style={style}>
+    <div ref={ref} className={className}>
       {reduced ? <div>{children}</div> : <motion.div style={{ y }}>{children}</motion.div>}
     </div>
   );
@@ -292,12 +283,10 @@ export function MouseParallax({
   children,
   className,
   strength = 10,
-  style,
 }: {
   children: ReactNode;
   className?: string;
   strength?: number;
-  style?: MotionStyle | undefined;
 }) {
   const reduced = useReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
@@ -337,7 +326,7 @@ export function MouseParallax({
   }, [enabled, mx, my, strength]);
 
   return (
-    <div ref={ref} className={className} style={style}>
+    <div ref={ref} className={className}>
       <motion.div style={{ x, y }}>{children}</motion.div>
     </div>
   );
