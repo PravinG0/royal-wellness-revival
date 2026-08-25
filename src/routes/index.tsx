@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import {
   Activity,
+  ArrowRight,
   BadgeCheck,
   FlaskConical,
   HeartPulse,
@@ -200,7 +201,6 @@ function Home() {
         {/* ---------------- Hero ---------------- */}
         <section className="relative overflow-hidden pt-32 pb-20 md:pt-44 md:pb-28">
           <FloatingElement
-            aria-hidden="true"
             className="pointer-events-none absolute -top-40 -right-32 h-[36rem] w-[36rem]"
             amplitude={14}
             duration={9}
@@ -356,7 +356,7 @@ function Home() {
                       className="mt-6 inline-flex items-center gap-2 text-sm font-semibold underline-offset-4 transition-all hover:gap-3 hover:underline"
                     >
                       Explore program
-                      <span aria-hidden="true">→</span>
+                      <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />
                     </a>
                   </article>
                 </RevealItem>
@@ -386,10 +386,10 @@ function Home() {
                 <RevealItem key={label}>
                   <a
                     href={href}
-                    className="surface-card flex items-center justify-between px-5 py-4 text-sm font-semibold tracking-wide hover:-translate-y-1 hover:border-brand"
+                    className="surface-card group flex items-center justify-between px-5 py-4 text-sm font-semibold tracking-wide hover:-translate-y-1 hover:border-brand"
                   >
                     {label}
-                    <span aria-hidden="true">→</span>
+                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />
                   </a>
                 </RevealItem>
               ))}
