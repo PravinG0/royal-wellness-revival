@@ -13,6 +13,7 @@ export default defineConfig({
     server: { entry: "server" },
   },
   nitro: {
+    preset: "vercel",
     externals: {
       inline: [
         "@tanstack/start-server-core",
