@@ -12,4 +12,12 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  ssr: {
+    noExternal: [
+      "@tanstack/start-server-core",
+      "@tanstack/react-start",
+      "@tanstack/router-core",
+      "@tanstack/react-router"
+    ],
+  },
 });
