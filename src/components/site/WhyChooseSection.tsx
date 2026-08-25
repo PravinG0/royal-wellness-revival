@@ -1,8 +1,25 @@
 import { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useTransform } from "motion/react";
+import { motion, useScroll, useTransform, animate, useMotionValue } from "motion/react";
 import { ArrowRight } from "lucide-react";
-import { GlowOrb, PulsingGrid, Reveal, RevealItem, RevealGroup } from "./motion-primitives";
+import { GlowOrb, PulsingGrid, Reveal, RevealItem } from "./motion-primitives";
 import consultRoom from "@/assets/consult-room.jpg";
+
+function AnimatedCounter({ value, direction = "up" }: { value: number, direction?: "up" | "down" }) {
+  const count = useMotionValue(direction === "up" ? 0 : value + 20);
+  const [display, setDisplay] = useState(direction === "up" ? 0 : value + 20);
+
+  useEffect(() => {
+    const controls = animate(count, value, {
+      duration: 2,
+      delay: 0.5,
+      ease: "easeOut",
+      onUpdate: (v) => setDisplay(Math.round(v)),
+    });
+    return () => controls.stop();
+  }, [value, count, direction]);
+
+  return <>{display}%</>;
+}
 
 export function WhyChooseSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -60,70 +77,67 @@ export function WhyChooseSection() {
 
             <div className="flex justify-center md:justify-end">
               <RevealItem x={40} delay={0.3}>
-                <div className="relative h-56 w-56 md:h-64 md:w-64">
-                  <motion.svg 
-                    viewBox="0 0 200 200" 
-                    className="h-full w-full drop-shadow-xl"
+                <div className="relative h-64 w-64 md:h-80 md:w-80 flex items-center justify-center">
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+                    className="absolute inset-0"
                   >
-                    <defs>
-                      <path
-                        id="ring-text-path"
-                        d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"
-                        fill="none"
-                      />
-                    </defs>
-                    <circle
-                      cx="100"
-                      cy="100"
-                      r="88"
-                      className="fill-none stroke-brand/10"
-                      strokeWidth="1"
-                    />
-                    
-                    {/* Rotating outer text */}
-                    <motion.g 
-                      animate={{ rotate: 360 }} 
-                      transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                      style={{ originX: "100px", originY: "100px" }}
-                    >
-                      <text className="fill-brand/60 text-[8.5px] font-semibold uppercase tracking-[0.4em]">
-                        <textPath href="#ring-text-path" startOffset="0%">
-                          Price Guarantee • Price Guarantee • Price Guarantee •
+                    <svg viewBox="0 0 200 200" className="h-full w-full opacity-60">
+                      <defs>
+                        <path id="circlePath" d="M 100, 100 m -75, 0 a 75,75 0 1,1 150,0 a 75,75 0 1,1 -150,0" />
+                      </defs>
+                      <text className="fill-brand text-[9.5px] font-bold uppercase tracking-[0.25em]">
+                        <textPath href="#circlePath" startOffset="0%">
+                          PRICE GUARANTEE • PRICE GUARANTEE • PRICE GUARANTEE • PRICE GUARANTEE •
                         </textPath>
                       </text>
-                    </motion.g>
+                    </svg>
+                  </motion.div>
+                  
+                  {/* Outer animated ring */}
+                  <svg viewBox="0 0 200 200" className="absolute inset-0 h-full w-full -rotate-90">
+                    <motion.circle
+                      cx="100"
+                      cy="100"
+                      r="60"
+                      className="fill-none stroke-brand/20"
+                      strokeWidth="2"
+                    />
+                    <motion.circle
+                      cx="100"
+                      cy="100"
+                      r="60"
+                      className="fill-none stroke-brand drop-shadow-[0_0_8px_rgba(var(--brand-rgb),0.5)]"
+                      strokeWidth="4"
+                      strokeLinecap="round"
+                      initial={{ strokeDasharray: 377, strokeDashoffset: 377 }}
+                      whileInView={{ strokeDashoffset: 94.25 }} // 75% filled
+                      viewport={{ once: true, margin: "-50px" }}
+                      transition={{ duration: 2, ease: "easeOut", delay: 0.5 }}
+                    />
+                  </svg>
 
-                    {/* Interactive animated drawing ring */}
-                    <motion.g 
-                      whileHover={{ rotate: 90 }} 
-                      transition={{ type: "spring", stiffness: 60 }}
-                      style={{ originX: "100px", originY: "100px" }}
-                    >
-                      <motion.circle
-                        cx="100"
-                        cy="100"
-                        r="66"
-                        className="fill-none stroke-brand/70"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        transform="rotate(-90 100 100)"
-                        initial={{ strokeDasharray: 415, strokeDashoffset: 415 }}
-                        whileInView={{ strokeDashoffset: 104 }} // 75% filled
-                        viewport={{ once: true, margin: "-100px" }}
-                        transition={{ duration: 1.5, ease: "easeInOut", delay: 0.5 }}
-                      />
-                    </motion.g>
-                  </motion.svg>
-                  <span className="absolute inset-0 flex items-center justify-center font-display text-5xl font-bold tracking-tight text-foreground md:text-6xl drop-shadow-md">
-                    <motion.div
+                  <div className="absolute inset-0 flex flex-col items-center justify-center font-display drop-shadow-md">
+                    <motion.span 
+                      className="text-6xl font-bold tracking-tight text-foreground md:text-7xl"
                       initial={{ scale: 0.5, opacity: 0 }}
                       whileInView={{ scale: 1, opacity: 1 }}
-                      transition={{ type: "spring", delay: 1 }}
+                      transition={{ type: "spring", delay: 0.5, bounce: 0.5 }}
                       viewport={{ once: true }}
                     >
-                      25%
-                    </motion.div>
-                  </span>
+                      <AnimatedCounter value={25} direction="up" />
+                    </motion.span>
+                    <motion.span 
+                      className="text-sm font-semibold text-brand tracking-widest uppercase mt-1"
+                      initial={{ opacity: 0, y: 10 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 1.5, duration: 0.5 }}
+                      viewport={{ once: true }}
+                    >
+                      Off
+                    </motion.span>
+                  </div>
                 </div>
               </RevealItem>
             </div>
@@ -135,47 +149,49 @@ export function WhyChooseSection() {
           <article className="group grid grid-cols-1 items-center gap-12 py-16 md:grid-cols-[0.85fr_1.15fr] md:gap-16">
             <div className="order-2 flex justify-center md:order-1 md:justify-start">
               <RevealItem x={-40} delay={0.2}>
-                <div className="relative h-48 w-64 md:h-56 md:w-72">
-                  <motion.svg viewBox="0 0 240 200" className="h-full w-full overflow-visible">
-                    <g className="lens-grid">
-                      {[0, 1, 2, 3, 4, 5].map((i) => (
-                        <line
-                          key={`h${i}`}
-                          x1="20"
-                          x2="220"
-                          y1={30 + i * 28}
-                          y2={30 + i * 28}
-                          className="stroke-brand/10"
-                          strokeWidth="1.5"
-                        />
-                      ))}
-                    </g>
-                    
-                    {/* Floating lenses */}
-                    <motion.circle
-                      cx="98"
-                      cy="100"
-                      r="58"
-                      className="fill-brand/5 stroke-brand/40 backdrop-blur-sm"
-                      strokeWidth="1.5"
-                      animate={{ x: [-5, 5, -5], y: [-5, 5, -5] }}
-                      transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                    />
-                    <motion.circle
-                      cx="146"
-                      cy="100"
-                      r="58"
-                      className="fill-brand/5 stroke-brand/40 backdrop-blur-sm"
-                      strokeWidth="1.5"
-                      animate={{ x: [5, -5, 5], y: [5, -5, 5] }}
-                      transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                    />
-                  </motion.svg>
+                <div className="relative h-64 w-64 md:h-80 md:w-80">
+                  {/* Decorative background shape */}
+                  <motion.div 
+                    className="absolute inset-0 rounded-full bg-brand/5 border border-brand/20"
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    whileInView={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 1 }}
+                    viewport={{ once: true }}
+                  />
                   
-                  {/* Decorative image behind lenses */}
-                  <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-32 rounded-xl overflow-hidden opacity-50 blur-[2px]">
-                    <img src={consultRoom} alt="Consultation" className="w-full h-full object-cover" />
+                  {/* Image container */}
+                  <div className="absolute inset-4 overflow-hidden rounded-full border border-border shadow-2xl">
+                    <motion.img 
+                      src={consultRoom} 
+                      alt="Consultation Room" 
+                      className="h-full w-full object-cover"
+                      whileHover={{ scale: 1.05 }}
+                      transition={{ duration: 0.7 }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-tr from-brand/20 to-transparent mix-blend-overlay" />
                   </div>
+
+                  {/* Floating badge */}
+                  <motion.div 
+                    className="absolute -bottom-4 -right-4 md:-bottom-2 md:-right-2 bg-background border border-brand/20 shadow-xl rounded-2xl p-4 flex items-center gap-4 backdrop-blur-md"
+                    initial={{ y: 20, opacity: 0 }}
+                    whileInView={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.6, type: "spring" }}
+                    viewport={{ once: true }}
+                    animate={{ y: [0, -8, 0] }}
+                    // @ts-ignore
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                  >
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand/10 text-brand">
+                      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Guarantee</p>
+                      <p className="text-lg font-bold text-foreground">0 Hidden Fees</p>
+                    </div>
+                  </motion.div>
                 </div>
               </RevealItem>
             </div>

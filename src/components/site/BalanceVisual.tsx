@@ -1,6 +1,6 @@
 import trtImg from "@/assets/trt-patient-new.jpg";
 import weightImg from "@/assets/weight-loss-new.jpg";
-import labImg from "@/assets/lab-testing-new.jpg";
+import labImg from "@/assets/imgi_152_GB-1 1.png";
 
 export function BalanceVisual() {
   return (

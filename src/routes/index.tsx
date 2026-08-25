@@ -21,6 +21,7 @@ import { BalanceSection } from "@/components/site/BalanceSection";
 import { Footer } from "@/components/site/Footer";
 import { WhyChooseSection } from "@/components/site/WhyChooseSection";
 import { OurCommitment } from "@/components/site/OurCommitment";
+import { DisclosureSection } from "@/components/site/DisclosureSection";
 import {
   AnimatedCheck,
   BlurReveal,
@@ -201,13 +202,6 @@ const STEPS = [
   },
 ];
 
-const DISCLAIMERS = [
-  "The FDA does not verify the safety, effectiveness, or quality of compounded drugs offered at our clinic.",
-  "As an alternative to FDA-approved branded products, where appropriate, a provider may prescribe a compounded drug, which is prepared by a state-licensed sterile compounding pharmacy partner. Although compounded drugs are permitted to be prescribed under federal law, they are not FDA-approved and do not undergo safety, effectiveness, or manufacturing review.",
-  "Claims of personalization and potential reduction in side effects are based on the ability of compounding to customize treatment for individual needs. These benefits are not guaranteed. Side effects may still occur and vary by patient.",
-  "Compounded medications offered through this service are prescribed on an individual basis by a licensed healthcare provider. While some patients may experience weight loss or other benefits, results are not guaranteed. Outcomes depend on a variety of factors including, but not limited to, patient health status, genetics, lifestyle, diet, and exercise. Neither the prescribing provider nor the pharmacy makes any promise or warranty of specific results.",
-];
-
 function Home() {
   return (
     <div id="top" className="min-h-screen bg-background text-foreground">
@@ -241,7 +235,7 @@ function Home() {
         <section><FinalCtaSection /></section>
 
         {/* ---------------- Disclaimers ---------------- */}
-        <DisclaimersSection />
+        <DisclosureSection />
       </main>
       <Footer />
     </div>
@@ -699,34 +693,5 @@ function CommitmentSection() {
     </section>
   );
 }
-
-function DisclaimersSection() {
-  return (
-    <section aria-labelledby="disclaimers" className="border-t border-border/10 bg-foreground text-background py-16 relative overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,var(--brand-soft)_0%,transparent_50%)] opacity-10 pointer-events-none mix-blend-screen" />
-      <div className="container-rmc relative z-10">
-        <Reveal>
-          <div className="flex items-center gap-3 mb-8">
-            <div className="grid h-10 w-10 place-items-center rounded-full bg-background/5 border border-background/10">
-              <ShieldCheck className="h-5 w-5 text-background/60" aria-hidden="true" />
-            </div>
-            <h2 id="disclaimers" className="text-xl font-bold tracking-tight">
-              FDA & Compounding Disclaimers
-            </h2>
-          </div>
-        </Reveal>
-        
-        <RevealGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {DISCLAIMERS.map((d, i) => (
-            <RevealItem key={i}>
-              <div className="h-full rounded-2xl border border-background/10 bg-background/5 p-6 backdrop-blur transition-colors hover:bg-background/10">
-                <span className="text-brand-foreground font-bold text-lg mb-2 block opacity-80">0{i + 1}</span>
-                <p className="text-xs leading-relaxed text-background/70">{d}</p>
-              </div>
-            </RevealItem>
-          ))}
-        </RevealGroup>
-      </div>
-    </section>
   );
 }
