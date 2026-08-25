@@ -151,7 +151,11 @@ export function CtaLink({
           ? "text-accent-foreground"
           : "border border-border bg-card text-foreground hover:bg-secondary",
       )}
-      style={variant === "brand" ? { background: "var(--gradient-brand)", boxShadow: "var(--shadow-brand)" } : undefined}
+      style={
+        variant === "brand"
+          ? { background: "var(--gradient-brand)", boxShadow: "var(--shadow-brand)" }
+          : {}
+      }
     >
       <span className="relative z-10">{children}</span>
       {variant === "brand" && (
