@@ -55,8 +55,8 @@ export function Reveal({
   return (
     <Comp
       className={className}
-      initial={{ opacity: 0, y, x, scale, filter: blur ? `blur(${blur}px)` : undefined }}
-      whileInView={{ opacity: 1, y: 0, x: 0, scale: 1, filter: blur ? "blur(0px)" : undefined }}
+      initial={{ opacity: 0, y, x, scale, ...(blur ? { filter: `blur(${blur}px)` } : {}) }}
+      whileInView={{ opacity: 1, y: 0, x: 0, scale: 1, ...(blur ? { filter: "blur(0px)" } : {}) }}
       viewport={viewportOnce}
       transition={{ duration, delay, ease: EASE }}
     >
@@ -157,7 +157,7 @@ export function ImageReveal({
   from?: "bottom" | "left" | "none";
   delay?: number;
   zoom?: boolean;
-  style?: CSSProperties;
+  style?: CSSProperties | undefined;
 }) {
   const reduced = useReducedMotion();
   const clipFrom =
@@ -203,7 +203,7 @@ export function FloatingElement({
   amplitude?: number;
   duration?: number;
   delay?: number;
-  style?: CSSProperties;
+  style?: CSSProperties | undefined;
 }) {
   const reduced = useReducedMotion();
   if (reduced) return <div className={className} style={style}>{children}</div>;
@@ -267,7 +267,7 @@ export function ParallaxElement({
   children: ReactNode;
   className?: string;
   distance?: number;
-  style?: CSSProperties;
+  style?: CSSProperties | undefined;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
@@ -277,7 +277,7 @@ export function ParallaxElement({
 
   return (
     <div ref={ref} className={className} style={style}>
-      <motion.div style={reduced ? undefined : { y }}>{children}</motion.div>
+      {reduced ? <div>{children}</div> : <motion.div style={{ y }}>{children}</motion.div>}
     </div>
   );
 }
@@ -296,7 +296,7 @@ export function MouseParallax({
   children: ReactNode;
   className?: string;
   strength?: number;
-  style?: CSSProperties;
+  style?: CSSProperties | undefined;
 }) {
   const reduced = useReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
@@ -463,8 +463,7 @@ export function OrbitRing({ className = "", duration = 40 }: { className?: strin
       className={className}
       fill="none"
       aria-hidden="true"
-      animate={reduced ? undefined : { rotate: 360 }}
-      transition={{ duration, repeat: Infinity, ease: "linear" }}
+      {...(reduced ? {} : { animate: { rotate: 360 }, transition: { duration, repeat: Infinity, ease: "linear" as const } })}
     >
       <circle cx="100" cy="100" r="86" stroke="currentColor" strokeWidth="2" strokeDasharray="6 12" strokeLinecap="round" />
     </motion.svg>
