@@ -7,15 +7,11 @@ type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
 };
 
-let serverEntryPromise: Promise<ServerEntry> | undefined;
+import _serverEntry from "@tanstack/react-start/server-entry";
+const serverEntry = _serverEntry as unknown as ServerEntry;
 
 async function getServerEntry(): Promise<ServerEntry> {
-  if (!serverEntryPromise) {
-    serverEntryPromise = import("@tanstack/react-start/server-entry").then(
-      (m) => (m.default ?? m) as ServerEntry,
-    );
-  }
-  return serverEntryPromise;
+  return serverEntry;
 }
 
 // h3 swallows in-handler throws into a normal 500 Response with body
