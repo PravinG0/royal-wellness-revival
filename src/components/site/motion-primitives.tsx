@@ -231,7 +231,7 @@ export function DrawSVG({
   delay?: number;
   strokeWidth?: number;
   dashed?: boolean;
-) {
+}) {
   const reduced = useReducedMotion();
   return (
     <svg viewBox={viewBox} className={className} fill="none" aria-hidden="true" {...rest}>
