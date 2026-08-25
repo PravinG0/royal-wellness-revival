@@ -1,8 +1,52 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Sparkles } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
 import heroImage from "@/assets/hero-patients.jpg";
 import { WellnessOrbit } from "./WellnessOrbit";
 import { HeroBackdrop } from "./HeroBackdrop";
+
+function RotatingHeadline() {
+  const [index, setIndex] = useState(0);
+  const words = [
+    { text: "More Energy", color: "#186C96" },
+    { text: "Radiant Skin", color: "#2E6351" },
+    { text: "Restful Sleep", color: "#3E829C" },
+    { text: "Sexual Wellness", color: "#74A019" },
+    { text: "Balanced Mind", color: "#2E6351" },
+    { text: "Thicker Hair", color: "#2E6351" },
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % words.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, [words.length]);
+
+  return (
+    <h1
+      id="hero-heading"
+      className="mt-4 font-display text-[clamp(2.6rem,6.4vw,4.6rem)] font-light leading-[1.1] tracking-[-0.025em] text-foreground flex flex-col items-start h-[160px] md:h-[180px] lg:h-[190px]"
+    >
+      <div className="relative w-full h-[1em] mb-2 overflow-visible">
+        <AnimatePresence mode="popLayout">
+          <motion.span
+            key={index}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -30 }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+            className="absolute left-0 font-medium whitespace-nowrap drop-shadow-sm"
+            style={{ color: words[index].color }}
+          >
+            {words[index].text}
+          </motion.span>
+        </AnimatePresence>
+      </div>
+      <span className="font-bold text-foreground">Personalized to you</span>
+    </h1>
+  );
+}
 
 const BENEFITS = [
   { label: "More Energy", angle: -90 },
@@ -62,15 +106,10 @@ export function Hero() {
         <div className="max-w-xl animate-rise">
           <p className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-card/70 px-4 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.22em] text-brand backdrop-blur-sm">
             <Sparkles className="h-3.5 w-3.5 text-brand" aria-hidden="true" />
-            Personalized to you
+            Royal Medical Center
           </p>
 
-          <h1
-            id="hero-heading"
-            className="mt-7 font-display text-[clamp(2.6rem,6.4vw,4.6rem)] font-light leading-[1.03] tracking-[-0.025em] text-foreground"
-          >
-            Royal Medical Center
-          </h1>
+          <RotatingHeadline />
 
           <p className="mt-7 max-w-md text-base leading-relaxed text-muted-foreground sm:text-lg">
             Competitive pricing for Testosterone Therapy, Hormone Therapy, Weight Management, and Peptide programs — personalized and designed around your individual health needs.
@@ -95,17 +134,6 @@ export function Hero() {
             </a>
           </div>
 
-          <div className="mt-10 flex items-center gap-4 border-t border-border/70 pt-6 lg:hidden">
-            <span className="h-9 w-px bg-gradient-to-b from-transparent via-brand to-transparent" />
-            <p className="text-sm text-muted-foreground">
-              <span className="block text-[0.66rem] font-semibold uppercase tracking-[0.2em] text-brand">
-                Personalized Programs
-              </span>
-              Starting at{" "}
-              <span className="font-display text-lg font-medium text-foreground">$67/mo</span>
-              <span aria-hidden="true">*</span>
-            </p>
-          </div>
         </div>
 
         {/* ---------------- RIGHT: wellness visual ---------------- */}
@@ -164,19 +192,7 @@ export function Hero() {
               })}
             </div>
 
-            {/* floating pricing card */}
-            <div
-              className="glass-panel absolute -bottom-8 left-1/2 hidden w-[13.5rem] -translate-x-1/2 rounded-2xl px-5 py-4 text-center sm:bottom-[-2%] sm:left-[-2%] sm:block sm:translate-x-0 sm:text-left lg:bottom-4 lg:left-0"
-              style={shift(18)}
-            >
-              <p className="text-[0.6rem] font-semibold uppercase tracking-[0.2em] text-brand">
-                Personalized Programs
-              </p>
-              <p className="mt-1 text-xs text-muted-foreground">Starting at</p>
-              <p className="font-display text-2xl font-medium leading-tight text-foreground">
-                $67/mo<span aria-hidden="true">*</span>
-              </p>
-            </div>
+
           </div>
 
           {/* mobile: simplified benefit chips */}
@@ -190,6 +206,32 @@ export function Hero() {
               </li>
             ))}
           </ul>
+        </div>
+      </div>
+
+      {/* 3 Pricing Cards matching attached image style */}
+      <div className="relative mx-auto max-w-7xl px-5 sm:px-8 lg:px-10 mt-2 lg:mt-8 pb-12 z-20">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
+          <div className="rounded-xl p-6 md:p-8 flex flex-col justify-center shadow-lg transition-transform hover:-translate-y-1" style={{ backgroundColor: '#6A7D64' }}>
+            <h3 className="text-white text-xl md:text-2xl font-semibold leading-tight">TRT/HRT</h3>
+            <p className="text-white/90 text-lg md:text-xl font-medium mt-1">
+              Programs starting<br />at <span className="text-[#C4E193] font-bold">$89/mo</span>
+            </p>
+          </div>
+          
+          <div className="rounded-xl p-6 md:p-8 flex flex-col justify-center shadow-lg transition-transform hover:-translate-y-1" style={{ backgroundColor: '#408182' }}>
+            <h3 className="text-white text-xl md:text-2xl font-semibold leading-tight">Peptide Therapy</h3>
+            <p className="text-white/90 text-lg md:text-xl font-medium mt-1">
+              starting at<br /><span className="text-[#B9E198] font-bold">$139/mo</span>
+            </p>
+          </div>
+          
+          <div className="rounded-xl p-6 md:p-8 flex flex-col justify-center shadow-lg transition-transform hover:-translate-y-1" style={{ backgroundColor: '#6A7D64' }}>
+            <h3 className="text-white text-xl md:text-2xl font-semibold leading-tight">Weight Loss (glp-1)</h3>
+            <p className="text-white/90 text-lg md:text-xl font-medium mt-1">
+              programs starting<br />at <span className="text-[#C4E193] font-bold">$67/mo</span>
+            </p>
+          </div>
         </div>
       </div>
     </section>

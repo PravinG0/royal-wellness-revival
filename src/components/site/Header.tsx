@@ -39,19 +39,6 @@ export function Header() {
         boxShadow: scrolled ? "var(--shadow-soft)" : "none",
       }}
     >
-      <div className="hidden border-b border-border/70 bg-secondary/60 py-1.5 text-xs text-muted-foreground md:block">
-        <div className="container-rmc flex items-center justify-between">
-          <p>Licensed medical supervision · Nationwide telehealth</p>
-          <div className="flex items-center gap-5">
-            <a className="transition-colors hover:text-foreground" href="tel:18006253837">
-              1-800-625-3837
-            </a>
-            <a className="transition-colors hover:text-foreground" href="mailto:info@rmmcenter.com">
-              info@rmmcenter.com
-            </a>
-          </div>
-        </div>
-      </div>
 
       <nav className="container-rmc flex h-18 items-center justify-between py-3" aria-label="Main">
         <a href="#top" className="group flex items-center gap-2.5">
