@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Menu, Phone, X } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
+import { ArrowRight, Menu, Phone, X } from "lucide-react";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
 
 const NAV = [
@@ -22,8 +22,13 @@ export function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const reduced = useReducedMotion();
+
   return (
-    <header
+    <motion.header
+      initial={reduced ? { opacity: 0 } : { opacity: 0, y: -16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-all duration-300",
         scrolled ? "backdrop-blur-md" : "",
@@ -62,12 +67,23 @@ export function Header() {
         <ul className="hidden items-center gap-1 lg:flex">
           {NAV.map((item) => (
             <li key={item.href}>
-              <a
+              <motion.a
                 href={item.href}
-                className="relative rounded-full px-3.5 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                initial="rest"
+                whileHover="hover"
+                whileFocus="hover"
+                animate="rest"
+                className="group relative rounded-full px-3.5 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
               >
                 {item.label}
-              </a>
+                <motion.span
+                  aria-hidden="true"
+                  className="absolute bottom-1 left-3.5 h-0.5 rounded-full bg-brand"
+                  variants={{ rest: { scaleX: 0 }, hover: { scaleX: 1 } }}
+                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                  style={{ right: "0.875rem", originX: 0 }}
+                />
+              </motion.a>
             </li>
           ))}
         </ul>
@@ -102,9 +118,20 @@ export function Header() {
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             className="overflow-hidden border-t border-border bg-background lg:hidden"
           >
-            <ul className="container-rmc space-y-1 py-4">
+            <motion.ul
+              className="container-rmc space-y-1 py-4"
+              initial="hidden"
+              animate="show"
+              variants={{ show: { transition: { staggerChildren: 0.06, delayChildren: 0.08 } } }}
+            >
               {NAV.map((item) => (
-                <li key={item.href}>
+                <motion.li
+                  key={item.href}
+                  variants={{
+                    hidden: { opacity: 0, y: reduced ? 0 : 10 },
+                    show: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] } },
+                  }}
+                >
                   <a
                     href={item.href}
                     onClick={() => setOpen(false)}
@@ -112,18 +139,24 @@ export function Header() {
                   >
                     {item.label}
                   </a>
-                </li>
+                </motion.li>
               ))}
-              <li className="pt-2">
+              <motion.li
+                className="pt-2"
+                variants={{
+                  hidden: { opacity: 0, y: reduced ? 0 : 10 },
+                  show: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] } },
+                }}
+              >
                 <CtaLink href="https://royalmedicalcenters.com/contact/#form" full>
                   Get Started
                 </CtaLink>
-              </li>
-            </ul>
+              </motion.li>
+            </motion.ul>
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </motion.header>
   );
 }
 
@@ -141,7 +174,11 @@ export function CtaLink({
   return (
     <motion.a
       href={href}
-      whileHover={{ y: -2 }}
+      initial="rest"
+      animate="rest"
+      whileHover="hover"
+      whileFocus="hover"
+      variants={{ rest: { y: 0, scale: 1 }, hover: { y: -2, scale: 1.02 } }}
       whileTap={{ scale: 0.97 }}
       transition={{ type: "spring", stiffness: 400, damping: 22 }}
       className={cn(
@@ -158,10 +195,20 @@ export function CtaLink({
       }
     >
       <span className="relative z-10">{children}</span>
+      <motion.span
+        aria-hidden="true"
+        className="relative z-10"
+        variants={{ rest: { x: 0 }, hover: { x: 4 } }}
+        transition={{ duration: 0.25, ease: "easeOut" }}
+      >
+        <ArrowRight className="h-4 w-4" />
+      </motion.span>
       {variant === "brand" && (
-        <span
+        <motion.span
           aria-hidden="true"
-          className="absolute inset-0 -translate-x-full bg-white/35 transition-transform duration-500 group-hover:translate-x-full"
+          className="absolute inset-0 bg-white/25"
+          variants={{ rest: { x: "-100%" }, hover: { x: "100%" } }}
+          transition={{ duration: 0.7, ease: "easeInOut" }}
         />
       )}
     </motion.a>
