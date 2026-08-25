@@ -149,3 +149,109 @@
     color: var(--color-foreground);
   }
 }
+
+/* ---------------------------------------------------------------
+   Royal Medical Center design system
+   Light, premium clinical aesthetic with a lime-green accent.
+---------------------------------------------------------------- */
+@theme inline {
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-brand-soft: var(--brand-soft);
+  --color-ink: var(--ink);
+  --color-surface: var(--surface);
+}
+
+:root {
+  --radius: 1rem;
+  --background: oklch(0.995 0.004 120);
+  --foreground: oklch(0.19 0.02 150);
+  --ink: oklch(0.19 0.02 150);
+  --surface: oklch(0.975 0.008 130);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.19 0.02 150);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.19 0.02 150);
+  --primary: oklch(0.22 0.03 155);
+  --primary-foreground: oklch(0.99 0.01 130);
+  --secondary: oklch(0.96 0.012 130);
+  --secondary-foreground: oklch(0.22 0.03 155);
+  --muted: oklch(0.96 0.01 140);
+  --muted-foreground: oklch(0.5 0.02 150);
+  --accent: oklch(0.86 0.21 131); /* #8CE22C */
+  --accent-foreground: oklch(0.2 0.03 150);
+  --brand: oklch(0.86 0.21 131);
+  --brand-foreground: oklch(0.2 0.03 150);
+  --brand-soft: oklch(0.95 0.08 131);
+  --border: oklch(0.91 0.012 140);
+  --input: oklch(0.91 0.012 140);
+  --ring: oklch(0.86 0.21 131);
+
+  --gradient-brand: linear-gradient(135deg, oklch(0.9 0.2 128), oklch(0.82 0.2 138));
+  --gradient-soft: linear-gradient(180deg, oklch(0.98 0.03 130), oklch(1 0 0));
+  --shadow-soft: 0 1px 2px oklch(0.19 0.02 150 / 0.04), 0 12px 32px -12px oklch(0.19 0.02 150 / 0.12);
+  --shadow-lift: 0 24px 60px -24px oklch(0.19 0.02 150 / 0.28);
+  --shadow-brand: 0 18px 40px -18px oklch(0.86 0.21 131 / 0.6);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
+
+@utility container-rmc {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 80rem;
+  padding-inline: 1.25rem;
+}
+
+@utility surface-card {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-soft);
+  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 300ms ease;
+}
+
+@utility text-gradient-brand {
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Animated dashed ring used by decorative medical SVGs */
+@keyframes rmc-spin-slow {
+  to { transform: rotate(360deg); }
+}
+@utility spin-slow {
+  animation: rmc-spin-slow 28s linear infinite;
+}
+@keyframes rmc-pulse-ring {
+  0% { transform: scale(0.9); opacity: 0.6; }
+  70% { transform: scale(1.25); opacity: 0; }
+  100% { opacity: 0; }
+}
+@utility pulse-ring {
+  animation: rmc-pulse-ring 2.6s ease-out infinite;
+}
+@keyframes rmc-draw {
+  to { stroke-dashoffset: 0; }
+}
