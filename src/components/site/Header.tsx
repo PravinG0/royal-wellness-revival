@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, Menu, Phone, X } from "lucide-react";
+import { ArrowRight, Menu, Mail, X } from "lucide-react";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { ScrollProgress } from "./motion-primitives";
+import rmcLogo from "@/assets/rmc logo.webp";
 
 const NAV = [
   { label: "Programs", href: "#programs" },
@@ -41,15 +42,8 @@ export function Header() {
     >
 
       <nav className="container-rmc flex h-18 items-center justify-between py-3" aria-label="Main">
-        <a href="#top" className="group flex items-center gap-2.5">
-          <span className="relative grid h-9 w-9 place-items-center rounded-xl" style={{ background: "var(--gradient-brand)" }}>
-            <svg viewBox="0 0 24 24" className="h-5 w-5 text-accent-foreground" aria-hidden="true">
-              <path d="M10 3h4v7h7v4h-7v7h-4v-7H3v-4h7z" fill="currentColor" />
-            </svg>
-          </span>
-          <span className="text-[15px] leading-tight font-semibold tracking-tight">
-            Royal Medical<span className="block text-[11px] font-medium tracking-[0.22em] text-muted-foreground uppercase">Center</span>
-          </span>
+        <a href="#top" className="group flex items-center">
+          <img src={rmcLogo} alt="Royal Medical Center" className="h-10 w-auto object-contain" />
         </a>
 
         <ul className="hidden items-center gap-1 lg:flex">
@@ -78,10 +72,10 @@ export function Header() {
 
         <div className="hidden items-center gap-3 md:flex">
           <a
-            href="tel:18006253837"
+            href="mailto:info@rmmcenter.com"
             className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2.5 text-sm font-medium transition-colors hover:bg-secondary"
           >
-            <Phone className="h-4 w-4" aria-hidden="true" /> Call
+            <Mail className="h-4 w-4" aria-hidden="true" /> info@rmmcenter.com
           </a>
           <CtaLink href="https://royalmedicalcenters.com/contact/#form">Get Started</CtaLink>
         </div>
